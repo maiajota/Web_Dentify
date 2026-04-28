@@ -1,0 +1,48 @@
+<div class="container-app">
+
+    <aside class="container-sidebar">
+
+        <div class="sidebar-marca">
+            <div class="marca-icone">
+                <svg lucideAlbum></svg>
+            </div>
+            <div class="marca-textos">
+                <span class="marca-nome">Dentify</span>
+                <span class="marca-subtitulo">Gestão clínica</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-navegacao">
+            <p class="navegacao-secao-titulo">Menu</p>
+            <ul class="sidebar-lista-itens">
+                <li class="sidebar-item">
+                    <a class="sidebar-link" routerLink="/pacientes" routerLinkActive="sidebar-link--ativo">
+                        <svg lucideUsers></svg>
+                        Pacientes
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" routerLink="/pacientes/novo" routerLinkActive="sidebar-link--ativo">
+                        <svg lucideUserPlus></svg>
+                        Novo paciente
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-rodape">
+            <a class="sidebar-link sidebar-link--sair" href="#" (click)="sair($event)">
+                <svg lucideLogOut></svg>
+                Sair
+            </a>
+        </div>
+
+    </aside>
+
+    <div class="area-principal">
+        <main class="area-conteudo">
+            <router-outlet />
+        </main>
+    </div>
+
+</div>

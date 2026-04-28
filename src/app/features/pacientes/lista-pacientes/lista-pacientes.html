@@ -1,0 +1,68 @@
+<div class="pagina-pacientes">
+
+    <div class="cabecalho-pagina">
+        <div class="cabecalho-textos">
+            <h1 class="cabecalho-titulo">Pacientes</h1>
+            <p class="cabecalho-subtitulo">{{ pacientes.length }} pacientes cadastrados</p>
+        </div>
+        <button class="botao-novo-paciente" routerLink="/pacientes/novo">
+            <svg lucidePlus></svg>
+            Novo paciente
+        </button>
+    </div>
+
+    <div class="container-busca">
+        <svg lucideSearch class="busca-icone"></svg>
+        <input
+            class="busca-campo"
+            type="text"
+            placeholder="Buscar por nome ou CPF..."
+            [(ngModel)]="termoBusca"
+            (input)="filtrarPacientes()"
+        />
+    </div>
+
+    <div class="container-tabela">
+        <table class="tabela-pacientes">
+            <thead class="tabela-cabecalho">
+            <tr>
+                <th class="tabela-coluna-titulo">Paciente</th>
+                <th class="tabela-coluna-titulo">CPF</th>
+                <th class="tabela-coluna-titulo">Telefone</th>
+                <th class="tabela-coluna-titulo">Procedimentos</th>
+                <th class="tabela-coluna-titulo">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                class="tabela-linha"
+                *ngFor="let paciente of pacientesFiltrados"
+                (click)="verPaciente(paciente.id)"
+            >
+                <td class="tabela-celula paciente-nome">{{ paciente.nome }}</td>
+                <td class="tabela-celula celula-secundaria">{{ paciente.cpf }}</td>
+                <td class="tabela-celula celula-secundaria">{{ paciente.telefone }}</td>
+                <td class="tabela-celula">
+                    <span class="badge-procedimentos">{{ paciente.totalProcedimentos }}</span>
+                </td>
+                <td class="tabela-celula">
+                    <button
+                        class="botao-acao"
+                        title="Ver detalhes"
+                        (click)="verPaciente(paciente.id); $event.stopPropagation()"
+                    >
+                        <svg lucideEye></svg>
+                    </button>
+                </td>
+            </tr>
+
+            <tr *ngIf="pacientesFiltrados.length === 0">
+                <td colspan="5" class="tabela-vazia">
+                    Nenhum paciente encontrado.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
