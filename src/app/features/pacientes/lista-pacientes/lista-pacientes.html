@@ -30,37 +30,53 @@
                 <th class="tabela-coluna-titulo">CPF</th>
                 <th class="tabela-coluna-titulo">Telefone</th>
                 <th class="tabela-coluna-titulo">Procedimentos</th>
-                <th class="tabela-coluna-titulo">Ações</th>
+                <th class="tabela-coluna-titulo tabela-coluna-titulo-centro">Ações</th>
             </tr>
             </thead>
             <tbody>
-            <tr
-                class="tabela-linha"
-                *ngFor="let paciente of pacientesFiltrados"
-                (click)="verPaciente(paciente.id)"
-            >
-                <td class="tabela-celula paciente-nome">{{ paciente.nome }}</td>
-                <td class="tabela-celula celula-secundaria">{{ paciente.cpf }}</td>
-                <td class="tabela-celula celula-secundaria">{{ paciente.telefone }}</td>
-                <td class="tabela-celula">
-                    <span class="badge-procedimentos">{{ paciente.totalProcedimentos }}</span>
-                </td>
-                <td class="tabela-celula">
-                    <button
-                        class="botao-acao"
-                        title="Ver detalhes"
-                        (click)="verPaciente(paciente.id); $event.stopPropagation()"
+                @for (paciente of pacientesFiltrados; track paciente.id) {
+                    <tr
+                        class="tabela-linha"
+                        (click)="verPaciente(paciente.id)"
                     >
-                        <svg lucideEye></svg>
-                    </button>
-                </td>
-            </tr>
+                        <td class="tabela-celula paciente-nome">{{ paciente.nome }}</td>
+                        <td class="tabela-celula celula-secundaria">{{ paciente.cpf }}</td>
+                        <td class="tabela-celula celula-secundaria">{{ paciente.telefone }}</td>
+                        <td class="tabela-celula">
+                            <span class="badge-procedimentos">{{ paciente.totalProcedimentos }}</span>
+                        </td>
+                        <td class="tabela-celula tabela-celula-centro">
+                            <button
+                                class="botao-acao"
+                                title="Ver detalhes"
+                                (click)="verPaciente(paciente.id); $event.stopPropagation()"
+                            >
+                                <svg lucideEye></svg>
+                            </button>
+                            <button
+                                class="botao-acao"
+                                title="Ver histórico"
+                            >
+                                <svg lucideClipboardClock></svg>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                @empty {
+                    <tr>
+                        <td colspan="5" class="tabela-celula" style="text-align: center;">
+                            Nenhum paciente encontrado.
+                        </td>
+                    </tr>
+                }
 
-            <tr *ngIf="pacientesFiltrados.length === 0">
-                <td colspan="5" class="tabela-vazia">
-                    Nenhum paciente encontrado.
-                </td>
-            </tr>
+                @if (pacientesFiltrados.length === 0) {
+                    <tr>
+                        <td colspan="5" class="tabela-vazia">
+                            Nenhum paciente encontrado.
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

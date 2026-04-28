@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
+import { LucideClipboardClock, LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
 
 export interface Paciente {
     id: number;
@@ -16,7 +16,15 @@ export interface Paciente {
 @Component({
     selector: 'app-lista-pacientes',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, LucidePlus, LucideEye, LucideSearch],
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterLink,
+        LucidePlus,
+        LucideEye,
+        LucideSearch,
+        LucideClipboardClock,
+    ],
     templateUrl: './lista-pacientes.html',
     styleUrl: './lista-pacientes.scss',
 })
