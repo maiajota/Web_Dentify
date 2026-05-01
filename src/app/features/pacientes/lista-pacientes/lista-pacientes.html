@@ -3,7 +3,7 @@
     <div class="cabecalho-pagina">
         <div class="cabecalho-textos">
             <h1 class="cabecalho-titulo">Pacientes</h1>
-            <p class="cabecalho-subtitulo">{{ pacientes.length }} pacientes cadastrados</p>
+            <p class="cabecalho-subtitulo">{{ pacientes().length }} pacientes cadastrados</p>
         </div>
         <button class="botao-novo-paciente" routerLink="/pacientes/novo">
             <svg lucidePlus></svg>
@@ -17,8 +17,8 @@
             class="busca-campo"
             type="text"
             placeholder="Buscar por nome ou CPF..."
-            [(ngModel)]="termoBusca"
-            (input)="filtrarPacientes()"
+            [ngModel]="termoBusca()"
+            (ngModelChange)="termoBusca.set($event)"
         />
     </div>
 
@@ -34,7 +34,7 @@
             </tr>
             </thead>
             <tbody>
-                @for (paciente of pacientesFiltrados; track paciente.id) {
+                @for (paciente of pacientesFiltrados(); track paciente.id) {
                     <tr
                         class="tabela-linha"
                         (click)="verPaciente(paciente.id)"
@@ -43,7 +43,7 @@
                         <td class="tabela-celula celula-secundaria">{{ paciente.cpf }}</td>
                         <td class="tabela-celula celula-secundaria">{{ paciente.telefone }}</td>
                         <td class="tabela-celula">
-                            <span class="badge-procedimentos">{{ paciente.totalProcedimentos }}</span>
+                            <span class="badge-procedimentos">{{ 0 }}</span>
                         </td>
                         <td class="tabela-celula tabela-celula-centro">
                             <button
@@ -61,16 +61,7 @@
                             </button>
                         </td>
                     </tr>
-                }
-                @empty {
-                    <tr>
-                        <td colspan="5" class="tabela-celula" style="text-align: center;">
-                            Nenhum paciente encontrado.
-                        </td>
-                    </tr>
-                }
-
-                @if (pacientesFiltrados.length === 0) {
+                } @empty {
                     <tr>
                         <td colspan="5" class="tabela-vazia">
                             Nenhum paciente encontrado.

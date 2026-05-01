@@ -3,6 +3,11 @@ import { LayoutPrincipalComponent } from './layout/layout-principal/layout-princ
 
 export const routes: Routes = [
     {
+        path: 'login',
+        loadComponent: () =>
+            import('./features/auth/login/login').then((m) => m.LoginComponent),
+    },
+    {
         path: '',
         component: LayoutPrincipalComponent,
         children: [

@@ -1,0 +1,142 @@
+@use '../../../../styles/variables' as *;
+
+.pagina-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $cor-fundo-app;
+    padding: 24px;
+}
+
+.card-login {
+    background: #ffffff;
+    border: 1px solid $cor-borda;
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+}
+
+.login-logo {
+    width: 36px;
+    height: 36px;
+    background: $azul-primario;
+    color: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.login-nome {
+    font-size: 20px;
+    font-weight: 700;
+    color: $cor-texto-escuro;
+}
+
+.login-titulo {
+    font-size: 22px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+    margin: 0 0 6px;
+}
+
+.login-subtitulo {
+    font-size: 14px;
+    color: $cor-texto-suave;
+    margin: 0 0 28px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-escuro;
+}
+
+.campo-input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    font-size: 14px;
+    color: $cor-texto-escuro;
+    background: #ffffff;
+    transition: border-color 0.15s;
+
+    &::placeholder {
+        color: $cor-texto-suave;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $azul-primario;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    &--erro {
+        border-color: #ef4444;
+
+        &:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+    }
+}
+
+.campo-erro {
+    font-size: 12px;
+    color: #ef4444;
+}
+
+.alerta-erro {
+    padding: 10px 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #dc2626;
+}
+
+.botao-entrar {
+    height: 42px;
+    background: $azul-primario;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 4px;
+
+    &:hover:not(:disabled) {
+        background: #1d4ed8;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
