@@ -1,0 +1,165 @@
+@use 'variables' as *;
+
+.container-app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: $cor-fundo-app;
+}
+
+.container-sidebar {
+    width: $largura-sidebar;
+    min-width: $largura-sidebar;
+    background: $cor-fundo-sidebar;
+    border-right: 1px solid $cor-borda;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.sidebar-marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid $cor-borda;
+}
+
+.marca-icone {
+    width: 40px;
+    height: 40px;
+    background: $azul-primario;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.marca-textos {
+    display: flex;
+    flex-direction: column;
+}
+
+.marca-nome {
+    font-size: 15px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+    line-height: 1.2;
+}
+
+.marca-subtitulo {
+    font-size: 12px;
+    color: $cor-texto-suave;
+}
+
+// --- Navegação ---
+.sidebar-navegacao {
+    flex: 1;
+    padding: 20px 12px 12px;
+}
+
+.navegacao-secao-titulo {
+    font-size: 11px;
+    font-weight: 600;
+    color: $cor-texto-suave;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    padding: 0 8px;
+}
+
+.sidebar-lista-itens {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-item {
+    width: 100%;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+
+    lucide-angular {
+        flex-shrink: 0;
+        opacity: 0.7;
+    }
+
+    &:hover {
+        background: $azul-claro;
+        color: $azul-primario;
+
+        lucide-angular { opacity: 1; }
+    }
+
+    &--ativo {
+        background: $azul-claro;
+        color: $azul-primario;
+        font-weight: 600;
+
+        lucide-angular { opacity: 1; }
+    }
+
+    &--sair {
+        &:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+    }
+}
+
+.sidebar-rodape {
+    padding: 16px 12px;
+    border-top: 1px solid $cor-borda;
+}
+
+.area-principal {
+    margin-left: $largura-sidebar;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.botao-toggle-menu {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: $cor-texto-suave;
+    border-radius: 6px;
+    padding: 0;
+    cursor: pointer;
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $cor-texto-escuro;
+    }
+}
+
+.area-conteudo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+}

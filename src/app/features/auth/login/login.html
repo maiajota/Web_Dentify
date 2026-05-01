@@ -1,0 +1,62 @@
+<div class="pagina-login">
+    <div class="card-login">
+        <div class="login-marca">
+            <span class="login-logo">D</span>
+            <span class="login-nome">Dentify</span>
+        </div>
+
+        <h1 class="login-titulo">Bem-vindo de volta</h1>
+        <p class="login-subtitulo">Entre com suas credenciais para continuar</p>
+
+        <form class="login-form" [formGroup]="form" (ngSubmit)="entrar()">
+            <div class="campo-grupo">
+                <label class="campo-label" for="email">E-mail</label>
+                <input
+                    id="email"
+                    class="campo-input"
+                    [class.campo-input--erro]="emailCtrl.invalid && emailCtrl.touched"
+                    type="email"
+                    placeholder="seu@email.com"
+                    formControlName="email"
+                    autocomplete="email"
+                    aria-describedby="email-erro"
+                />
+                @if (emailCtrl.invalid && emailCtrl.touched) {
+                    <span id="email-erro" class="campo-erro" role="alert">
+                        @if (emailCtrl.hasError('required')) { O e-mail é obrigatório. }
+                        @else { Insira um e-mail válido. }
+                    </span>
+                }
+            </div>
+
+            <div class="campo-grupo">
+                <label class="campo-label" for="senha">Senha</label>
+                <input
+                    id="senha"
+                    class="campo-input"
+                    [class.campo-input--erro]="senhaCtrl.invalid && senhaCtrl.touched"
+                    type="password"
+                    placeholder="••••••••"
+                    formControlName="senha"
+                    autocomplete="current-password"
+                    aria-describedby="senha-erro"
+                />
+                @if (senhaCtrl.invalid && senhaCtrl.touched) {
+                    <span id="senha-erro" class="campo-erro" role="alert">
+                        A senha é obrigatória.
+                    </span>
+                }
+            </div>
+
+            @if (erro()) {
+                <div class="alerta-erro" role="alert" aria-live="polite">
+                    {{ erro() }}
+                </div>
+            }
+
+            <button class="botao-entrar" type="submit" [disabled]="carregando()">
+                @if (carregando()) { Entrando... } @else { Entrar }
+            </button>
+        </form>
+    </div>
+</div>
