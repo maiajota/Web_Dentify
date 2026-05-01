@@ -3,7 +3,7 @@ import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { ListaPacientesComponent } from './lista-pacientes';
-import { PacientesService } from '../pacientes.service';
+import { PacienteService } from '../paciente.service';
 import { Paciente } from '../paciente.model';
 
 const PACIENTES_MOCK: Paciente[] = [
@@ -56,7 +56,7 @@ describe('ListaPacientesComponent', () => {
             imports: [ListaPacientesComponent],
             providers: [
                 provideRouter([]),
-                { provide: PacientesService, useValue: pacientesService },
+                { provide: PacienteService, useValue: pacientesService },
             ],
         }).compileComponents();
 
@@ -168,7 +168,7 @@ describe('ListaPacientesComponent sem pacientes', () => {
             imports: [ListaPacientesComponent],
             providers: [
                 provideRouter([]),
-                { provide: PacientesService, useValue: { buscar: vi.fn().mockReturnValue(of([])) } },
+                { provide: PacienteService, useValue: { buscar: vi.fn().mockReturnValue(of([])) } },
             ],
         }).compileComponents();
 

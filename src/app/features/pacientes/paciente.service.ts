@@ -9,7 +9,7 @@ import {
 } from './paciente.model';
 
 @Injectable({ providedIn: 'root' })
-export class PacientesService {
+export class PacienteService {
     private http = inject(HttpClient);
 
     buscar() {
@@ -31,4 +31,5 @@ export class PacientesService {
     remover(id: number) {
         return this.http.delete<void>(API_ROUTES.pacientes.remover(id));
     }
+
 }

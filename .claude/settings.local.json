@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\maiaj\\\\Documents\\\\Web_Dentify\\\\src\\\\app\" -Recurse -Name)",
+      "Bash(Select-String \"\\\\.routes\\\\.|routing\")",
+      "Bash(Get-ChildItem *)"
+    ]
+  }
+}

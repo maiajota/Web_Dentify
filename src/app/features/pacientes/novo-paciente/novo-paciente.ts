@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideSave } from '@lucide/angular';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
-import { PacientesService } from '../pacientes.service';
+import { PacienteService } from '../paciente.service';
 import { PacienteCadastro } from '../paciente.model';
 import { CpfMaskDirective } from '../cpf-mask.directive';
 import { TelefoneMaskDirective } from '../telefone-mask.directive';
@@ -29,7 +29,7 @@ import { MessageService } from 'primeng/api';
 })
 export class NovoPacienteComponent {
     private fb = inject(FormBuilder);
-    private pacientesService = inject(PacientesService);
+    private pacientesService = inject(PacienteService);
     private roteador = inject(Router);
     private messageService = inject(MessageService);
 

@@ -11,7 +11,7 @@ export interface PacienteDetalhes {
     nome: string;
     cpf: string;
     telefone: string;
-    dataNasicmento: Date;
+    dataNascimento: Date;
     logradouro: string;
     quantidadeProcedimentos: number;
 }
@@ -28,6 +28,6 @@ export interface PacienteAtualizar {
     id: number;
     nome: string;
     telefone: string;
-    dataNasicmento: Date;
+    dataNascimento: Date;
     logradouro: string;
 }

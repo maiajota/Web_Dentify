@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideClipboardClock, LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
-import { PacientesService } from '../pacientes.service';
+import { PacienteService } from '../paciente.service';
 
 @Component({
     selector: 'app-lista-pacientes',
@@ -13,7 +13,7 @@ import { PacientesService } from '../pacientes.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaPacientesComponent {
-    private pacientesService = inject(PacientesService);
+    private pacientesService = inject(PacienteService);
     private roteador = inject(Router);
 
     termoBusca = signal('');
