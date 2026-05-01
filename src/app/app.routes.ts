@@ -23,6 +23,13 @@ export const routes: Routes = [
                         (m) => m.ListaPacientesComponent,
                     ),
             },
+            {
+                path: 'pacientes/novo',
+                loadComponent: () =>
+                    import('./features/pacientes/novo-paciente/novo-paciente').then(
+                        (m) => m.NovoPacienteComponent,
+                    ),
+            },
         ],
     },
 ];

@@ -16,7 +16,7 @@
             <p class="navegacao-secao-titulo">Menu</p>
             <ul class="sidebar-lista-itens">
                 <li class="sidebar-item">
-                    <a class="sidebar-link" routerLink="/pacientes" routerLinkActive="sidebar-link--ativo">
+                    <a class="sidebar-link" routerLink="/pacientes" routerLinkActive="sidebar-link--ativo" [routerLinkActiveOptions]="{ exact: true }">
                         <svg lucideUsers></svg>
                         Pacientes
                     </a>

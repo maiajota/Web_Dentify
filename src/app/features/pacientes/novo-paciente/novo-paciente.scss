@@ -1,0 +1,140 @@
+@use 'sass:color';
+@use 'variables' as *;
+
+.pagina-novo-paciente {
+    max-width: 800px;
+}
+
+.cabecalho-pagina {
+    margin-bottom: 24px;
+}
+
+.cabecalho-textos {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cabecalho-titulo {
+    font-size: 24px;
+    font-weight: 700;
+    color: $cor-texto-escuro;
+    margin: 0;
+}
+
+.cabecalho-subtitulo {
+    font-size: 13px;
+    color: $cor-texto-suave;
+    margin: 0;
+}
+
+.container-formulario {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid $cor-borda;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 28px;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formulario-linha {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &.campo-grupo-completo {
+        grid-column: 1 / -1;
+    }
+}
+
+.campo-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+}
+
+.campo-input {
+    padding: 10px 14px;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    font-size: 14px;
+    color: $cor-texto-escuro;
+    background: white;
+    outline: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &::placeholder {
+        color: #9ca3af;
+    }
+
+    &:focus {
+        border-color: $azul-primario;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+}
+
+.formulario-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid $cor-borda;
+    margin-top: 4px;
+}
+
+.botao-cancelar {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: white;
+    color: $cor-texto-suave;
+    border: 1px solid $cor-borda;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    &:hover {
+        background: #f9fafb;
+        color: $cor-texto-escuro;
+        border-color: #d1d5db;
+    }
+}
+
+.botao-salvar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: $azul-primario;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.30);
+    transition: background 0.15s, box-shadow 0.15s;
+
+    &:hover:not(:disabled) {
+        background: color.adjust($azul-primario, $lightness: -8%);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.40);
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+}

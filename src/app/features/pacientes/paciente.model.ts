@@ -20,7 +20,7 @@ export interface PacienteCadastro {
     nome: string;
     cpf: string;
     telefone: string;
-    dataNasicmento: Date;
+    dataNascimento: Date;
     logradouro: string;
 }
 
