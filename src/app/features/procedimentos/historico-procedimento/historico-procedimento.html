@@ -1,0 +1,119 @@
+<div class="pagina-historico">
+    <a
+        class="botao-voltar"
+        [routerLink]="['/pacientes', paciente()?.id]"
+        aria-label="Voltar para detalhes do paciente"
+    >
+        <svg lucideArrowLeft aria-hidden="true"></svg>
+        Voltar para o paciente
+    </a>
+
+    <div class="historico-cabecalho">
+        <div class="historico-cabecalho-textos">
+            <h1 class="historico-titulo">Histórico de procedimentos</h1>
+            @if (paciente(); as p) {
+                <p class="historico-subtitulo">{{ p.nome }} · {{ p.quantidadeProcedimentos }} procedimentos</p>
+            }
+        </div>
+        <button type="button" class="botao-novo" (click)="abrirModal()">
+            <svg lucidePlus aria-hidden="true"></svg>
+            Novo Procedimento
+        </button>
+    </div>
+
+    <section class="card-procedimentos" aria-label="Histórico de procedimentos">
+        <ul class="lista-procedimentos" role="list">
+            @for (proc of procedimentos(); track proc.id) {
+                <li class="item-procedimento">
+                    <span class="procedimento-data">{{ proc.dataProcedimento | date:'dd/MM/yyyy' }}</span>
+                    <div class="procedimento-info">
+                        <strong class="procedimento-descricao">{{ proc.descricao }}</strong>
+                        <span class="procedimento-convenio">{{ proc.convenioNome }}</span>
+                    </div>
+                </li>
+            } @empty {
+                <li class="procedimentos-vazios">Nenhum procedimento registrado.</li>
+            }
+        </ul>
+    </section>
+</div>
+
+@if (modalAberta()) {
+    <div
+        class="modal-overlay"
+        role="presentation"
+        (click)="fecharModal()"
+    >
+        <div
+            class="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-titulo"
+            (click)="$event.stopPropagation()"
+        >
+            <div class="modal-cabecalho">
+                <h2 id="modal-titulo" class="modal-titulo">Adicionar Procedimento</h2>
+                <button
+                    type="button"
+                    class="modal-fechar"
+                    aria-label="Fechar modal"
+                    (click)="fecharModal()"
+                >
+                    <svg lucideX aria-hidden="true"></svg>
+                </button>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="salvar()" class="modal-form">
+                <div class="campo">
+                    <label class="campo-label" for="data">Data</label>
+                    <p-datePicker
+                        inputId="data"
+                        formControlName="dataProcedimento"
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                        appendTo="body"
+                    />
+                </div>
+
+                <div class="campo">
+                    <label class="campo-label" for="descricao">Descrição</label>
+                    <textarea
+                        id="descricao"
+                        class="campo-textarea"
+                        formControlName="descricao"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <div class="campo">
+                    <label class="campo-label" for="convenio">Convênio</label>
+                    <select
+                        id="convenio"
+                        class="campo-select"
+                        formControlName="convenioId"
+                    >
+                        <option [ngValue]="null" disabled>Selecione um convênio</option>
+                        @for (c of convenios(); track c.id) {
+                            <option [ngValue]="c.id">{{ c.nome }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="modal-acoes">
+                    <button type="button" class="botao-cancelar" (click)="fecharModal()">
+                        Cancelar
+                    </button>
+                    <button
+                        type="submit"
+                        class="botao-salvar"
+                        [disabled]="form.invalid || salvando()"
+                    >
+                        {{ salvando() ? 'Salvando...' : 'Salvar' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+<p-toast />

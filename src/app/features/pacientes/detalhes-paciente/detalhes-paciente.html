@@ -44,10 +44,14 @@
                         Mostrando os {{ ultimosProcedimentos().length }} mais recentes de {{ p.quantidadeProcedimentos }}
                     </p>
                 </div>
-                <button class="botao-historico" type="button" aria-label="Ver histórico completo de procedimentos">
+                <a
+                    class="botao-historico"
+                    [routerLink]="['/pacientes', paciente()?.id, 'procedimentos']"
+                    aria-label="Ver histórico completo de procedimentos"
+                >
                     <svg lucideClipboardClock aria-hidden="true"></svg>
                     Ver histórico completo
-                </button>
+                </a>
             </div>
 
             <ul class="lista-procedimentos">

@@ -38,6 +38,13 @@ export const routes: Routes = [
                         (m) => m.DetalhesPacienteComponent,
                     ),
             },
+            {
+                path: 'pacientes/:id/procedimentos',
+                loadComponent: () =>
+                    import('./features/procedimentos/historico-procedimento/historico-procedimento').then(
+                        (m) => m.HistoricoProcedimentoComponent,
+                    ),
+            },
         ],
     },
 ];

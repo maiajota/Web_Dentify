@@ -1,6 +1,14 @@
 export interface Procedimento {
     id: number;
     descricao: string;
-    tipoConvenio: string;
-    data: Date;
+    convenioNome: string;
+    convenioId: number
+    dataProcedimento: Date;
+}
+
+export interface ProcedimentoCadastro {
+    dataProcedimento: Date;
+    descricao: string;
+    convenioId: number;
+    pacienteId: number;
 }

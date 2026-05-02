@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 import {
     LucideCalendar,
@@ -23,6 +23,7 @@ import { Procedimento } from '../../procedimentos/procedimento.model';
         LucidePhone,
         LucideMapPin,
         LucideClipboardClock,
+        RouterLink,
     ],
     templateUrl: './detalhes-paciente.html',
     styleUrl: './detalhes-paciente.scss',

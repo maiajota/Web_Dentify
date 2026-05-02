@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_ROUTES } from '../../core/api-routes';
-import { Procedimento } from './procedimento.model';
+import { Procedimento, ProcedimentoCadastro } from './procedimento.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProcedimentoService {
@@ -13,5 +13,9 @@ export class ProcedimentoService {
 
     buscarRecentesPorPaciente(pacienteId: number, quantidade: number) {
         return this.http.get<Procedimento[]>(API_ROUTES.procedimentos.buscarRecentes(pacienteId, quantidade));
+    }
+
+    adicionar(procedimento: ProcedimentoCadastro) {
+        return this.http.post<void>(API_ROUTES.procedimentos.adicionar, procedimento);
     }
 }
