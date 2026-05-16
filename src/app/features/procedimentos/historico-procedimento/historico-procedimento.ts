@@ -49,7 +49,7 @@ export class HistoricoProcedimentoComponent {
     form = new FormGroup({
         dataProcedimento: new FormControl<Date | null>(new Date(), [Validators.required]),
         descricao: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        convenioId: new FormControl<number | null>(null, [Validators.required]),
+        convenioId: new FormControl<number | null>(null),
     });
 
     abrirModal(): void {
@@ -72,7 +72,7 @@ export class HistoricoProcedimentoComponent {
         const payload: ProcedimentoCadastro = {
             dataProcedimento: dataProcedimento!,
             descricao,
-            convenioId: convenioId!,
+            convenioId: convenioId,
             pacienteId,
         };
 

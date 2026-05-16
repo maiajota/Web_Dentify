@@ -10,7 +10,7 @@
 
     <div class="historico-cabecalho">
         <div class="historico-cabecalho-textos">
-            <h1 class="historico-titulo">Histórico de procedimentos</h1>
+            <h1 class="historico-titulo">Histórico de Procedimentos</h1>
             @if (paciente(); as p) {
                 <p class="historico-subtitulo">{{ p.nome }} · {{ p.quantidadeProcedimentos }} procedimentos</p>
             }
@@ -65,7 +65,7 @@
 
             <form [formGroup]="form" (ngSubmit)="salvar()" class="modal-form">
                 <div class="campo">
-                    <label class="campo-label" for="data">Data</label>
+                    <label class="campo-label" for="data">Data *</label>
                     <p-datePicker
                         inputId="data"
                         formControlName="dataProcedimento"
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="campo">
-                    <label class="campo-label" for="descricao">Descrição</label>
+                    <label class="campo-label" for="descricao">Descrição *</label>
                     <textarea
                         id="descricao"
                         class="campo-textarea"
@@ -92,7 +92,7 @@
                         class="campo-select"
                         formControlName="convenioId"
                     >
-                        <option [ngValue]="null" disabled>Selecione um convênio</option>
+                        <option [ngValue]="null">Nenhum</option>
                         @for (c of convenios(); track c.id) {
                             <option [ngValue]="c.id">{{ c.nome }}</option>
                         }

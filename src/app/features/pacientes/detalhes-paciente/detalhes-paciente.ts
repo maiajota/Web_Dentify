@@ -13,6 +13,8 @@ import {
 import { PacienteService } from '../paciente.service';
 import { ProcedimentoService } from '../../procedimentos/procedimento.service';
 import { Procedimento } from '../../procedimentos/procedimento.model';
+import { TelefonePipe } from '../telefone.pipe';
+import { CpfPipe } from '../cpf.pipe';
 
 @Component({
     selector: 'app-detalhes-paciente',
@@ -24,6 +26,8 @@ import { Procedimento } from '../../procedimentos/procedimento.model';
         LucideMapPin,
         LucideClipboardClock,
         RouterLink,
+        TelefonePipe,
+        CpfPipe,
     ],
     templateUrl: './detalhes-paciente.html',
     styleUrl: './detalhes-paciente.scss',

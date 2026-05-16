@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { LucideClipboardClock, LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
+import { LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
 import { PacienteService } from '../paciente.service';
 
 @Component({
     selector: 'app-lista-pacientes',
-    imports: [FormsModule, RouterLink, LucidePlus, LucideEye, LucideSearch, LucideClipboardClock],
+    imports: [FormsModule, RouterLink, LucidePlus, LucideEye, LucideSearch],
     templateUrl: './lista-pacientes.html',
     styleUrl: './lista-pacientes.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +22,7 @@ export class ListaPacientesComponent {
     pacientesFiltrados = computed(() => {
         const termo = this.termoBusca().toLowerCase().trim();
         if (!termo) return this.pacientes();
+
         return this.pacientes().filter(
             (p) => p.nome.toLowerCase().includes(termo) || p.cpf.includes(termo),
         );

@@ -11,7 +11,7 @@
                     <svg lucideCreditCard class="card-info-icone" aria-hidden="true"></svg>
                     <span class="card-info-label">CPF</span>
                 </div>
-                <span class="card-info-valor">{{ p.cpf }}</span>
+                <span class="card-info-valor">{{ p.cpf | cpf }}</span>
             </div>
             <div class="card-info" role="listitem">
                 <div class="card-info-titulo">
@@ -25,7 +25,7 @@
                     <svg lucidePhone class="card-info-icone" aria-hidden="true"></svg>
                     <span class="card-info-label">Telefone</span>
                 </div>
-                <span class="card-info-valor">{{ p.telefone }}</span>
+                <span class="card-info-valor">{{ p.telefone | telefone }}</span>
             </div>
             <div class="card-info -grande" role="listitem">
                 <div class="card-info-titulo">
@@ -60,7 +60,7 @@
                         <span class="procedimento-bolinha" aria-hidden="true"></span>
                         <div class="procedimento-info">
                             <strong class="procedimento-descricao">{{ proc.descricao }}</strong>
-                            <span class="procedimento-convenio">{{ proc.tipoConvenio }}</span>
+                            <span class="procedimento-convenio">{{ proc.convenioNome }}</span>
                         </div>
                     </li>
                 } @empty {
