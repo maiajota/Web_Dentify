@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideSave } from '@lucide/angular';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
+import { InputText } from 'primeng/inputtext';
 import { PacienteService } from '../paciente.service';
 import { PacienteCadastro } from '../paciente.model';
 import { CpfMaskDirective } from '../cpf-mask.directive';
@@ -17,6 +18,7 @@ import { MessageService } from 'primeng/api';
         RouterLink,
         LucideSave,
         DatePicker,
+        InputText,
         CpfMaskDirective,
         TelefoneMaskDirective,
         ToastModule,

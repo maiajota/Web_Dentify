@@ -21,6 +21,51 @@
         </button>
     </div>
 
+    <div class="filtros" [formGroup]="filtros" role="search" aria-label="Filtrar procedimentos">
+        <input
+            pInputText
+            class="filtro-input"
+            type="search"
+            formControlName="descricao"
+            placeholder="Buscar por descrição..."
+            aria-label="Filtrar por descrição"
+        />
+        <p-multiSelect
+            formControlName="convenios"
+            [options]="convenios()"
+            optionLabel="nome"
+            optionValue="id"
+            placeholder="Convênios"
+            appendTo="body"
+        />
+        <p-datePicker
+            formControlName="periodo"
+            selectionMode="range"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            placeholder="Período"
+            appendTo="body"
+        />
+        <button
+            type="button"
+            class="botao-filtrar"
+            pTooltip="Filtrar"
+            tooltipPosition="top"
+            (click)="filtrar()"
+        >
+            <svg lucideFunnel aria-hidden="true"></svg>
+        </button>
+        <button
+            type="button"
+            class="botao-limpar"
+            pTooltip="Limpar Filtro"
+            tooltipPosition="top"
+            (click)="limparFiltros()"
+        >
+            <svg lucideTrash aria-hidden="true"></svg>
+        </button>
+    </div>
+
     <section class="card-procedimentos" aria-label="Histórico de procedimentos">
         <ul class="lista-procedimentos" role="list">
             @for (proc of procedimentos(); track proc.id) {
@@ -78,6 +123,7 @@
                 <div class="campo">
                     <label class="campo-label" for="descricao">Descrição *</label>
                     <textarea
+                        pTextarea
                         id="descricao"
                         class="campo-textarea"
                         formControlName="descricao"

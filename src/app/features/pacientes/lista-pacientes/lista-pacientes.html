@@ -14,6 +14,7 @@
     <div class="container-busca">
         <svg lucideSearch class="busca-icone"></svg>
         <input
+            pInputText
             class="busca-campo"
             type="text"
             placeholder="Buscar por nome ou CPF..."
@@ -35,10 +36,7 @@
             </thead>
             <tbody>
                 @for (paciente of pacientesFiltrados(); track paciente.id) {
-                    <tr
-                        class="tabela-linha"
-                        (click)="verPaciente(paciente.id)"
-                    >
+                    <tr class="tabela-linha">
                         <td class="tabela-celula paciente-nome">{{ paciente.nome }}</td>
                         <td class="tabela-celula celula-secundaria">{{ paciente.cpf }}</td>
                         <td class="tabela-celula celula-secundaria">{{ paciente.telefone }}</td>
@@ -48,7 +46,8 @@
                         <td class="tabela-celula tabela-celula-centro">
                             <button
                                 class="botao-acao"
-                                title="Ver detalhes"
+                                pTooltip="Ver detalhes"
+                                tooltipPosition="top"
                                 (click)="verPaciente(paciente.id); $event.stopPropagation()"
                             >
                                 <svg lucideEye></svg>

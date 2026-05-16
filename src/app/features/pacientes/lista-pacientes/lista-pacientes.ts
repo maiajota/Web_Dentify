@@ -3,11 +3,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
+import { InputText } from 'primeng/inputtext';
+import { Tooltip } from 'primeng/tooltip';
 import { PacienteService } from '../paciente.service';
 
 @Component({
     selector: 'app-lista-pacientes',
-    imports: [FormsModule, RouterLink, LucidePlus, LucideEye, LucideSearch],
+    imports: [FormsModule, RouterLink, LucidePlus, LucideEye, LucideSearch, InputText, Tooltip],
     templateUrl: './lista-pacientes.html',
     styleUrl: './lista-pacientes.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

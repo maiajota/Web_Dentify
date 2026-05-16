@@ -65,24 +65,8 @@
 }
 
 .campo-input {
-    padding: 10px 14px;
-    border: 1px solid $cor-borda;
-    border-radius: 8px;
-    font-size: 14px;
-    color: $cor-texto-escuro;
-    background: white;
-    outline: none;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    transition: border-color 0.15s, box-shadow 0.15s;
-
-    &::placeholder {
-        color: #9ca3af;
-    }
-
-    &:focus {
-        border-color: $azul-primario;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
-    }
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .formulario-acoes {

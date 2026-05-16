@@ -57,7 +57,7 @@
             <ul class="lista-procedimentos">
                 @for (proc of ultimosProcedimentos(); track proc.id) {
                     <li class="item-procedimento">
-                        <span class="procedimento-bolinha" aria-hidden="true"></span>
+                        <span class="procedimento-data">{{ proc.dataProcedimento | date:'dd/MM/yyyy' }}</span>
                         <div class="procedimento-info">
                             <strong class="procedimento-descricao">{{ proc.descricao }}</strong>
                             <span class="procedimento-convenio">{{ proc.convenioNome }}</span>
