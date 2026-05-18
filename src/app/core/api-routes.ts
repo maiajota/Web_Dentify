@@ -19,6 +19,8 @@ export const API_ROUTES = {
         buscarPorId: (pacienteId: number) => `${BASE}/api/Procedimento/buscarTodos/${pacienteId}`,
         buscarRecentes: (pacienteId: number, quantidade: number) => `${BASE}/api/Procedimento/buscarRecentes/${pacienteId}?quantidade=${quantidade}`,
         adicionar: `${BASE}/api/Procedimento/adicionar`,
+        atualizar: (id: number) => `${BASE}/api/Procedimento/atualizar/${id}`,
+        remover: (id: number) => `${BASE}/api/Procedimento/remover/${id}`,
     },
     convenios: {
         buscar: `${BASE}/api/Convenio/buscar`,

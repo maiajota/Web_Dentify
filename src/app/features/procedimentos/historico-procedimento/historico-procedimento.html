@@ -75,6 +75,28 @@
                         <strong class="procedimento-descricao">{{ proc.descricao }}</strong>
                         <span class="procedimento-convenio">{{ proc.convenioNome }}</span>
                     </div>
+                    <div class="procedimento-acoes">
+                        <button
+                            type="button"
+                            class="botao-acao"
+                            pTooltip="Editar"
+                            tooltipPosition="top"
+                            aria-label="Editar procedimento"
+                            (click)="abrirModalEdicao(proc)"
+                        >
+                            <svg lucidePencil aria-hidden="true"></svg>
+                        </button>
+                        <button
+                            type="button"
+                            class="botao-acao botao-acao--perigo"
+                            pTooltip="Excluir"
+                            tooltipPosition="top"
+                            aria-label="Excluir procedimento"
+                            (click)="confirmarRemocao(proc)"
+                        >
+                            <svg lucideTrash aria-hidden="true"></svg>
+                        </button>
+                    </div>
                 </li>
             } @empty {
                 <li class="procedimentos-vazios">Nenhum procedimento registrado.</li>
@@ -97,7 +119,7 @@
             (click)="$event.stopPropagation()"
         >
             <div class="modal-cabecalho">
-                <h2 id="modal-titulo" class="modal-titulo">Adicionar Procedimento</h2>
+                <h2 id="modal-titulo" class="modal-titulo">{{ procedimentoEmEdicao() ? 'Editar Procedimento' : 'Adicionar Procedimento' }}</h2>
                 <button
                     type="button"
                     class="modal-fechar"
@@ -158,6 +180,51 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+}
+
+@if (procedimentoParaRemover()) {
+    <div
+        class="modal-overlay"
+        role="presentation"
+        (click)="cancelarRemocao()"
+    >
+        <div
+            class="modal modal--confirmacao"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="modal-confirmacao-titulo"
+            aria-describedby="modal-confirmacao-descricao"
+            (click)="$event.stopPropagation()"
+        >
+            <div class="modal-cabecalho">
+                <h2 id="modal-confirmacao-titulo" class="modal-titulo">Excluir Procedimento</h2>
+                <button
+                    type="button"
+                    class="modal-fechar"
+                    aria-label="Fechar modal"
+                    (click)="cancelarRemocao()"
+                >
+                    <svg lucideX aria-hidden="true"></svg>
+                </button>
+            </div>
+            <p id="modal-confirmacao-descricao" class="modal-confirmacao-texto">
+                Você tem certeza que deseja excluir esse procedimento?
+            </p>
+            <div class="modal-acoes modal-acoes--confirmacao">
+                <button type="button" class="botao-cancelar" (click)="cancelarRemocao()">
+                    Cancelar
+                </button>
+                <button
+                    type="button"
+                    class="botao-excluir"
+                    [disabled]="removendo()"
+                    (click)="remover()"
+                >
+                    {{ removendo() ? 'Excluindo...' : 'Excluir' }}
+                </button>
+            </div>
         </div>
     </div>
 }

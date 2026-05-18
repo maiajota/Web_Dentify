@@ -4,35 +4,35 @@ import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { ListaPacientesComponent } from './lista-pacientes';
 import { PacienteService } from '../paciente.service';
-import { Paciente } from '../paciente.model';
+import { PacienteDetalhes } from '../paciente.model';
 
-const PACIENTES_MOCK: Paciente[] = [
+const PACIENTES_MOCK: PacienteDetalhes[] = [
     {
         id: 1,
         nome: 'João Victor',
         cpf: '123.456.789-00',
         telefone: '(11) 91111-1111',
-        DataNascimento: new Date('1990-01-15'),
+        dataNascimento: new Date('1990-01-15'),
         logradouro: 'Rua A, 100',
-        usuarioId: 1,
+        quantidadeProcedimentos: 2,
     },
     {
         id: 2,
         nome: 'Maria Laura',
         cpf: '987.654.321-00',
         telefone: '(11) 92222-2222',
-        DataNascimento: new Date('1985-06-20'),
+        dataNascimento: new Date('1985-06-20'),
         logradouro: 'Rua B, 200',
-        usuarioId: 1,
+        quantidadeProcedimentos: 4,
     },
     {
         id: 3,
         nome: 'Diana Maia',
         cpf: '111.222.333-44',
         telefone: '(11) 93333-3333',
-        DataNascimento: new Date('1978-12-01'),
+        dataNascimento: new Date('1978-12-01'),
         logradouro: 'Rua C, 300',
-        usuarioId: 1,
+        quantidadeProcedimentos: 0
     },
 ];
 

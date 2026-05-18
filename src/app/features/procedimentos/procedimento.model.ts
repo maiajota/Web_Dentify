@@ -12,3 +12,9 @@ export interface ProcedimentoCadastro {
     convenioId: number | null;
     pacienteId: number;
 }
+
+export interface ProcedimentoAtualizacao {
+    dataProcedimento: Date;
+    descricao: string;
+    convenioId: number | null;
+}

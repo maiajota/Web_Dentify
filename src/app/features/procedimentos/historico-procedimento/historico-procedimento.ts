@@ -5,7 +5,7 @@ import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
-import { LucideArrowLeft, LucideFunnel, LucidePlus, LucideTrash, LucideX } from '@lucide/angular';
+import { LucideArrowLeft, LucideFunnel, LucidePencil, LucidePlus, LucideTrash, LucideX } from '@lucide/angular';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { InputText } from 'primeng/inputtext';
@@ -15,13 +15,31 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { PacienteService } from '../../pacientes/paciente.service';
 import { ProcedimentoService } from '../procedimento.service';
-import { Procedimento, ProcedimentoCadastro } from '../procedimento.model';
+import { Procedimento } from '../procedimento.model';
 import { ConvenioService } from '../../convenios/convenio.service';
 import { Convenio } from '../../convenios/convenio.model';
 
 @Component({
     selector: 'app-historico-procedimento',
-    imports: [DatePipe, ReactiveFormsModule, RouterLink, LucideArrowLeft, LucideFunnel, LucidePlus, LucideTrash, LucideX, DatePicker, DatePickerModule, MultiSelect, MultiSelectModule, InputText, Textarea, Tooltip, ToastModule],
+    imports: [
+        DatePipe,
+        ReactiveFormsModule,
+        RouterLink,
+        LucideArrowLeft,
+        LucideFunnel,
+        LucidePencil,
+        LucidePlus,
+        LucideTrash,
+        LucideX,
+        DatePicker,
+        DatePickerModule,
+        MultiSelect,
+        MultiSelectModule,
+        InputText,
+        Textarea,
+        Tooltip,
+        ToastModule,
+    ],
     providers: [MessageService],
     templateUrl: './historico-procedimento.html',
     styleUrl: './historico-procedimento.scss',
@@ -40,6 +58,9 @@ export class HistoricoProcedimentoComponent {
 
     modalAberta = signal(false);
     salvando = signal(false);
+    removendo = signal(false);
+    procedimentoEmEdicao = signal<Procedimento | null>(null);
+    procedimentoParaRemover = signal<Procedimento | null>(null);
 
     convenios = toSignal(this.convenioService.buscar(), { initialValue: [] as Convenio[] });
 
@@ -47,9 +68,9 @@ export class HistoricoProcedimentoComponent {
 
     procedimentos = toSignal(
         combineLatest([this.id$, this.refresh$, this.filtroParams$]).pipe(
-            switchMap(([id, , params]) => this.procedimentoService.buscarPorPaciente(id, params))
+            switchMap(([id, , params]) => this.procedimentoService.buscarPorPaciente(id, params)),
         ),
-        { initialValue: [] as Procedimento[] }
+        { initialValue: [] as Procedimento[] },
     );
 
     filtros = new FormGroup({
@@ -60,7 +81,10 @@ export class HistoricoProcedimentoComponent {
 
     form = new FormGroup({
         dataProcedimento: new FormControl<Date | null>(new Date(), [Validators.required]),
-        descricao: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        descricao: new FormControl<string>('', {
+            nonNullable: true,
+            validators: [Validators.required],
+        }),
         convenioId: new FormControl<number | null>(null),
     });
 
@@ -83,39 +107,95 @@ export class HistoricoProcedimentoComponent {
     }
 
     abrirModal(): void {
+        this.procedimentoEmEdicao.set(null);
         this.form.reset({ dataProcedimento: new Date(), descricao: '', convenioId: null });
+        this.modalAberta.set(true);
+    }
+
+    abrirModalEdicao(procedimento: Procedimento): void {
+        this.procedimentoEmEdicao.set(procedimento);
+        this.form.reset({
+            dataProcedimento: new Date(`${procedimento.dataProcedimento}T00:00:00`),
+            descricao: procedimento.descricao,
+            convenioId: procedimento.convenioId ?? null,
+        });
         this.modalAberta.set(true);
     }
 
     fecharModal(): void {
         this.modalAberta.set(false);
+        this.procedimentoEmEdicao.set(null);
+    }
+
+    confirmarRemocao(proc: Procedimento): void {
+        this.procedimentoParaRemover.set(proc);
+    }
+
+    cancelarRemocao(): void {
+        this.procedimentoParaRemover.set(null);
+    }
+
+    remover(): void {
+        const procedimento = this.procedimentoParaRemover();
+        if (!procedimento || this.removendo()) return;
+
+        this.removendo.set(true);
+        this.procedimentoService.remover(procedimento.id).subscribe({
+            next: () => {
+                this.removendo.set(false);
+                this.cancelarRemocao();
+                this.refresh$.next();
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Procedimento removido',
+                    detail: 'O procedimento foi removido com sucesso.',
+                    life: 3000,
+                });
+            },
+            error: () => this.removendo.set(false),
+        });
     }
 
     salvar(): void {
         if (this.form.invalid || this.salvando()) return;
 
+        const emEdicao = this.procedimentoEmEdicao();
         const pacienteId = this.paciente()?.id;
-        if (!pacienteId) return;
 
         const { dataProcedimento, descricao, convenioId } = this.form.getRawValue();
 
-        const payload: ProcedimentoCadastro = {
-            dataProcedimento: dataProcedimento!,
-            descricao,
-            convenioId: convenioId,
-            pacienteId,
-        };
-
         this.salvando.set(true);
-        this.procedimentoService.adicionar(payload).subscribe({
+
+        let request$;
+
+        if (emEdicao) {
+            request$ = this.procedimentoService.atualizar(emEdicao.id, {
+                dataProcedimento: dataProcedimento!,
+                descricao,
+                convenioId,
+            });
+        } else {
+            request$ = this.procedimentoService.adicionar({
+                pacienteId: pacienteId!,
+                dataProcedimento: dataProcedimento!,
+                descricao,
+                convenioId,
+            });
+        }
+
+        if (!request$) return;
+
+        request$.subscribe({
             next: () => {
                 this.salvando.set(false);
                 this.fecharModal();
                 this.refresh$.next();
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Procedimento adicionado',
-                    detail: 'O procedimento foi registrado com sucesso.',
+                    summary: emEdicao ? 'Procedimento atualizado' : 'Procedimento adicionado',
+                    detail: emEdicao
+                        ? 'O procedimento foi atualizado com sucesso.'
+                        : 'O procedimento foi registrado com sucesso.',
                     life: 3000,
                 });
             },
