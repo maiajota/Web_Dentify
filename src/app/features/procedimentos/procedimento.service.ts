@@ -1,14 +1,27 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_ROUTES } from '../../core/api-routes';
-import { Procedimento, ProcedimentoAtualizacao, ProcedimentoCadastro } from './procedimento.model';
+import { PagedResult } from '../../core/models/paged-result.model';
+import { Procedimento, ProcedimentoAtualizacao, ProcedimentoCadastro, ProcedimentoRequest } from './procedimento.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProcedimentoService {
     private http = inject(HttpClient);
 
-    buscarPorPaciente(pacienteId: number, params?: HttpParams) {
-        return this.http.get<Procedimento[]>(API_ROUTES.procedimentos.buscarPorId(pacienteId), { params });
+    buscarPorPaciente(pacienteId: number, request?: ProcedimentoRequest) {
+        let params = new HttpParams();
+        if (request) {
+            if (request.descricao) params = params.set('descricao', request.descricao);
+
+            request.convenioIds?.forEach((id) => (params = params.append('convenioIds', id.toString())));
+
+            if (request.dataInicio) params = params.set('dataInicio', request.dataInicio);
+            if (request.dataFim) params = params.set('dataFim', request.dataFim);
+
+            params = params.set('pageNumber', request.pageNumber.toString());
+            params = params.set('pageSize', request.pageSize.toString());
+        }
+        return this.http.get<PagedResult<Procedimento>>(API_ROUTES.procedimentos.buscarPorId(pacienteId), { params });
     }
 
     buscarRecentesPorPaciente(pacienteId: number, quantidade: number) {

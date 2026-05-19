@@ -226,6 +226,57 @@
     }
 }
 
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.paginacao-botao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    color: $cor-texto-escuro;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+        background: $cor-fundo-app;
+        border-color: $azul-primario;
+        color: $azul-primario;
+    }
+
+    &:disabled {
+        color: $cor-texto-suave;
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.paginacao-info {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    min-width: 70px;
+    text-align: center;
+}
+
 .modal--confirmacao {
     max-width: 420px;
 }

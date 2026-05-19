@@ -18,3 +18,12 @@ export interface ProcedimentoAtualizacao {
     descricao: string;
     convenioId: number | null;
 }
+
+export interface ProcedimentoRequest {
+    descricao?: string;
+    convenioIds?: number[];
+    dataInicio?: string;
+    dataFim?: string;
+    pageNumber: number;
+    pageSize: number;
+}

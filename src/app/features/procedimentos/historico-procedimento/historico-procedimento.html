@@ -68,7 +68,7 @@
 
     <section class="card-procedimentos" aria-label="Histórico de procedimentos">
         <ul class="lista-procedimentos" role="list">
-            @for (proc of procedimentos(); track proc.id) {
+            @for (proc of procedimentos().data; track proc.id) {
                 <li class="item-procedimento">
                     <span class="procedimento-data">{{ proc.dataProcedimento | date:'dd/MM/yyyy' }}</span>
                     <div class="procedimento-info">
@@ -103,6 +103,30 @@
             }
         </ul>
     </section>
+
+    @if (procedimentos().totalPages > 1) {
+        <nav class="paginacao" aria-label="Navegação de páginas">
+            <button
+                type="button"
+                class="paginacao-botao"
+                aria-label="Página anterior"
+                [disabled]="procedimentos().pageNumber <= 1"
+                (click)="paginaAnterior()"
+            >
+                <svg lucideArrowLeft aria-hidden="true"></svg>
+            </button>
+            <span class="paginacao-info">{{ procedimentos().pageNumber }} de {{ procedimentos().totalPages }}</span>
+            <button
+                type="button"
+                class="paginacao-botao"
+                aria-label="Próxima página"
+                [disabled]="procedimentos().pageNumber >= procedimentos().totalPages"
+                (click)="proximaPagina()"
+            >
+                <svg lucideArrowRight aria-hidden="true"></svg>
+            </button>
+        </nav>
+    }
 </div>
 
 @if (modalAberta()) {

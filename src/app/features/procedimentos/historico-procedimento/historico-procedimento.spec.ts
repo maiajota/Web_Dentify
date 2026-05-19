@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { HttpParams } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { HistoricoProcedimentoComponent } from './historico-procedimento';
 import { PacienteService } from '../../pacientes/paciente.service';
 import { ProcedimentoService } from '../procedimento.service';
 import { ConvenioService } from '../../convenios/convenio.service';
-import { Procedimento } from '../procedimento.model';
+import { PagedResult } from '../../../core/models/paged-result.model';
+import { Procedimento, ProcedimentoRequest } from '../procedimento.model';
 import { PacienteDetalhes } from '../../pacientes/paciente.model';
 import { Convenio } from '../../convenios/convenio.model';
 
@@ -43,6 +43,14 @@ const CONVENIOS_MOCK: Convenio[] = [
     { id: 2, nome: 'Amil' },
 ];
 
+const PAGED_RESULT_MOCK: PagedResult<Procedimento> = {
+    data: PROCEDIMENTOS_MOCK,
+    pageNumber: 1,
+    pageSize: 20,
+    totalItems: 2,
+    totalPages: 1,
+};
+
 type ProcedimentoServiceMock = {
     buscarPorPaciente: ReturnType<typeof vi.fn>;
     adicionar: ReturnType<typeof vi.fn>;
@@ -51,11 +59,13 @@ type ProcedimentoServiceMock = {
 };
 
 async function criarFixture(overrides?: {
-    procedimentos?: Procedimento[];
+    pagedResult?: Partial<PagedResult<Procedimento>>;
     paciente?: PacienteDetalhes | null;
 }) {
+    const pagedResult: PagedResult<Procedimento> = { ...PAGED_RESULT_MOCK, ...overrides?.pagedResult };
+
     const procedimentoService: ProcedimentoServiceMock = {
-        buscarPorPaciente: vi.fn().mockReturnValue(of(overrides?.procedimentos ?? PROCEDIMENTOS_MOCK)),
+        buscarPorPaciente: vi.fn().mockReturnValue(of(pagedResult)),
         adicionar: vi.fn().mockReturnValue(of(undefined)),
         atualizar: vi.fn().mockReturnValue(of(undefined)),
         remover: vi.fn().mockReturnValue(of(undefined)),
@@ -338,22 +348,22 @@ describe('HistoricoProcedimentoComponent', () => {
     });
 
     describe('filtros', () => {
-        it('filtrar com descrição deve passar o query param descricao', async () => {
+        it('filtrar com descrição deve passar o param descricao', async () => {
             component.filtros.patchValue({ descricao: 'Limpeza' });
             component.filtrar();
             await fixture.whenStable();
 
-            const params = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as HttpParams;
-            expect(params.get('descricao')).toBe('Limpeza');
+            const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+            expect(request.descricao).toBe('Limpeza');
         });
 
-        it('filtrar com convênios deve passar os query params convenioIds', async () => {
+        it('filtrar com convênios deve passar os ids como array de números', async () => {
             component.filtros.patchValue({ convenios: [1, 2] });
             component.filtrar();
             await fixture.whenStable();
 
-            const params = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as HttpParams;
-            expect(params.getAll('convenioIds')).toEqual(['1', '2']);
+            const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+            expect(request.convenioIds).toEqual([1, 2]);
         });
 
         it('filtrar com período deve passar as datas formatadas como YYYY-MM-DD', async () => {
@@ -363,17 +373,28 @@ describe('HistoricoProcedimentoComponent', () => {
             component.filtrar();
             await fixture.whenStable();
 
-            const params = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as HttpParams;
-            expect(params.get('dataInicio')).toBe('2024-01-01');
-            expect(params.get('dataFim')).toBe('2024-03-31');
+            const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+            expect(request.dataInicio).toBe('2024-01-01');
+            expect(request.dataFim).toBe('2024-03-31');
         });
 
-        it('filtrar sem preenchimento não deve incluir query params', async () => {
+        it('filtrar sem preenchimento não deve incluir campos de filtro', async () => {
             component.filtrar();
             await fixture.whenStable();
 
-            const params = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as HttpParams;
-            expect(params.keys()).toHaveLength(0);
+            const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+            expect(request.descricao).toBeUndefined();
+            expect(request.dataInicio).toBeUndefined();
+            expect(request.dataFim).toBeUndefined();
+        });
+
+        it('filtrar deve incluir pageNumber e pageSize', async () => {
+            component.filtrar();
+            await fixture.whenStable();
+
+            const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+            expect(request.pageNumber).toBe(1);
+            expect(request.pageSize).toBe(20);
         });
 
         it('limparFiltros deve resetar o form para os valores padrão', () => {
@@ -382,14 +403,123 @@ describe('HistoricoProcedimentoComponent', () => {
             expect(component.filtros.getRawValue()).toEqual({ descricao: '', convenios: [], periodo: null });
         });
 
-        it('limparFiltros deve recarregar os procedimentos sem query params', async () => {
+        it('limparFiltros deve recarregar sem campos de filtro', async () => {
             component.filtros.patchValue({ descricao: 'teste' });
             component.filtrar();
             component.limparFiltros();
             await fixture.whenStable();
 
-            const params = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as HttpParams;
-            expect(params.keys()).toHaveLength(0);
+            const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+            expect(request.descricao).toBeUndefined();
+            expect(request.convenioIds).toBeUndefined();
+            expect(request.dataInicio).toBeUndefined();
+            expect(request.dataFim).toBeUndefined();
+        });
+    });
+
+    describe('paginação', () => {
+        it('não deve exibir a nav quando há apenas uma página', () => {
+            expect(el.querySelector('.paginacao')).toBeNull();
+        });
+
+        describe('com múltiplas páginas', () => {
+            beforeEach(async () => {
+                ({ fixture, component, el, procedimentoService } = await criarFixture({
+                    pagedResult: { pageNumber: 1, totalPages: 3, totalItems: 60 },
+                }));
+            });
+
+            it('deve exibir a nav de paginação', () => {
+                expect(el.querySelector('.paginacao')).not.toBeNull();
+            });
+
+            it('deve exibir a página atual e o total de páginas', () => {
+                const info = el.querySelector<HTMLElement>('.paginacao-info');
+                expect(info?.textContent?.trim()).toBe('1 de 3');
+            });
+
+            it('botão anterior deve estar disabled na primeira página', () => {
+                const botao = el.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
+                expect(botao?.disabled).toBe(true);
+            });
+
+            it('botão próximo deve estar enabled na primeira página', () => {
+                const botao = el.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
+                expect(botao?.disabled).toBe(false);
+            });
+
+            it('proximaPagina deve chamar o service com pageNumber incrementado', async () => {
+                component.proximaPagina();
+                await fixture.whenStable();
+
+                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+                expect(request.pageNumber).toBe(2);
+            });
+
+            it('paginaAnterior não deve chamar o service quando já está na primeira página', async () => {
+                const chamadasAntes = procedimentoService.buscarPorPaciente.mock.calls.length;
+                component.paginaAnterior();
+                await fixture.whenStable();
+                expect(procedimentoService.buscarPorPaciente.mock.calls.length).toBe(chamadasAntes);
+            });
+
+            it('paginaAnterior deve chamar o service com pageNumber decrementado', async () => {
+                component.proximaPagina();
+                await fixture.whenStable();
+                component.paginaAnterior();
+                await fixture.whenStable();
+
+                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+                expect(request.pageNumber).toBe(1);
+            });
+
+            it('proximaPagina não deve chamar o service quando já está na última página', async () => {
+                component.proximaPagina();
+                await fixture.whenStable();
+                component.proximaPagina();
+                await fixture.whenStable();
+
+                const chamadasAntes = procedimentoService.buscarPorPaciente.mock.calls.length;
+                component.proximaPagina();
+                await fixture.whenStable();
+                expect(procedimentoService.buscarPorPaciente.mock.calls.length).toBe(chamadasAntes);
+            });
+
+            it('filtrar deve resetar para a primeira página', async () => {
+                component.proximaPagina();
+                await fixture.whenStable();
+                component.filtrar();
+                await fixture.whenStable();
+
+                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+                expect(request.pageNumber).toBe(1);
+            });
+
+            it('limparFiltros deve resetar para a primeira página', async () => {
+                component.proximaPagina();
+                await fixture.whenStable();
+                component.limparFiltros();
+                await fixture.whenStable();
+
+                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+                expect(request.pageNumber).toBe(1);
+            });
+        });
+
+        it('botão próximo deve estar disabled na última página', async () => {
+            const { el: elUltima } = await criarFixture({
+                pagedResult: { pageNumber: 3, totalPages: 3, totalItems: 60 },
+            });
+            const botao = elUltima.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
+            expect(botao?.disabled).toBe(true);
+        });
+
+        it('botão anterior deve estar enabled na última página', async () => {
+            const { el: elUltima } = await criarFixture({
+                pagedResult: { pageNumber: 3, totalPages: 3, totalItems: 60 },
+            });
+            const botao = elUltima.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
+            expect(botao?.disabled).toBe(false);
         });
     });
 });
@@ -398,7 +528,7 @@ describe('HistoricoProcedimentoComponent sem procedimentos', () => {
     let el: HTMLElement;
 
     beforeEach(async () => {
-        ({ el } = await criarFixture({ procedimentos: [] }));
+        ({ el } = await criarFixture({ pagedResult: { data: [], totalItems: 0 } }));
     });
 
     it('deve exibir o estado vazio', () => {

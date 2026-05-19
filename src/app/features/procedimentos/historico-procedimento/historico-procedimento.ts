@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
-import { LucideArrowLeft, LucideFunnel, LucidePencil, LucidePlus, LucideTrash, LucideX } from '@lucide/angular';
+import { LucideArrowLeft, LucideArrowRight, LucideFunnel, LucidePencil, LucidePlus, LucideTrash, LucideX } from '@lucide/angular';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { InputText } from 'primeng/inputtext';
@@ -15,7 +14,8 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { PacienteService } from '../../pacientes/paciente.service';
 import { ProcedimentoService } from '../procedimento.service';
-import { Procedimento } from '../procedimento.model';
+import { PagedResult } from '../../../core/models/paged-result.model';
+import { Procedimento, ProcedimentoRequest } from '../procedimento.model';
 import { ConvenioService } from '../../convenios/convenio.service';
 import { Convenio } from '../../convenios/convenio.model';
 
@@ -26,6 +26,7 @@ import { Convenio } from '../../convenios/convenio.model';
         ReactiveFormsModule,
         RouterLink,
         LucideArrowLeft,
+        LucideArrowRight,
         LucideFunnel,
         LucidePencil,
         LucidePlus,
@@ -54,7 +55,7 @@ export class HistoricoProcedimentoComponent {
 
     private id$ = this.route.params.pipe(map((p) => +p['id']));
     private refresh$ = new BehaviorSubject<void>(undefined);
-    private filtroParams$ = new BehaviorSubject<HttpParams>(new HttpParams());
+    private filtroParams$ = new BehaviorSubject<ProcedimentoRequest>({ pageNumber: 1, pageSize: 20 });
 
     modalAberta = signal(false);
     salvando = signal(false);
@@ -68,9 +69,9 @@ export class HistoricoProcedimentoComponent {
 
     procedimentos = toSignal(
         combineLatest([this.id$, this.refresh$, this.filtroParams$]).pipe(
-            switchMap(([id, , params]) => this.procedimentoService.buscarPorPaciente(id, params)),
+            switchMap(([id, ,request]) => this.procedimentoService.buscarPorPaciente(id, request)),
         ),
-        { initialValue: [] as Procedimento[] },
+        { initialValue: { data: [], pageNumber: 1, pageSize: 20, totalItems: 0, totalPages: 0 } as PagedResult<Procedimento> },
     );
 
     filtros = new FormGroup({
@@ -90,20 +91,33 @@ export class HistoricoProcedimentoComponent {
 
     filtrar(): void {
         const { descricao, convenios, periodo } = this.filtros.getRawValue();
-        let params = new HttpParams();
+        this.filtroParams$.next({
+            pageNumber: 1,
+            pageSize: 20,
+            descricao: descricao || undefined,
+            convenioIds: convenios,
+            dataInicio: periodo?.[0]?.toISOString().split('T')[0],
+            dataFim: periodo?.[1]?.toISOString().split('T')[0],
+        });
+    }
 
-        if (descricao) params = params.set('descricao', descricao);
+    paginaAnterior(): void {
+        const atual = this.filtroParams$.getValue();
+        if (atual.pageNumber <= 1) return;
 
-        convenios.forEach((id) => (params = params.append('convenioIds', id.toString())));
+        this.filtroParams$.next({ ...atual, pageNumber: atual.pageNumber - 1 });
+    }
 
-        if (periodo?.[0]) params = params.set('dataInicio', periodo[0].toISOString().split('T')[0]);
-        if (periodo?.[1]) params = params.set('dataFim', periodo[1].toISOString().split('T')[0]);
-        this.filtroParams$.next(params);
+    proximaPagina(): void {
+        const atual = this.filtroParams$.getValue();
+        if (atual.pageNumber >= this.procedimentos().totalPages) return;
+
+        this.filtroParams$.next({ ...atual, pageNumber: atual.pageNumber + 1 });
     }
 
     limparFiltros(): void {
         this.filtros.reset({ descricao: '', convenios: [], periodo: null });
-        this.filtroParams$.next(new HttpParams());
+        this.filtroParams$.next({ pageNumber: 1, pageSize: 20 });
     }
 
     abrirModal(): void {
