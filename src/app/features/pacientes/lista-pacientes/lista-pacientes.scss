@@ -55,23 +55,44 @@
 }
 
 .container-busca {
-    position: relative;
+    display: flex;
+    gap: 12px;
+    align-items: center;
     margin-bottom: 20px;
 }
 
-.busca-icone {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: $cor-texto-suave;
-    pointer-events: none;
+.busca-campo {
+    flex: 1;
+    min-width: 200px;
 }
 
-.busca-campo {
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 42px;
+.botao-buscar {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: $azul-primario;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: color.adjust($azul-primario, $lightness: -8%);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
 }
 
 .container-tabela {
@@ -177,4 +198,56 @@
     padding: 48px;
     color: $cor-texto-suave;
     font-size: 14px;
+}
+
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.paginacao-botao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    color: $cor-texto-escuro;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+        background: $cor-fundo-app;
+        border-color: $azul-primario;
+        color: $azul-primario;
+    }
+
+    &:disabled {
+        color: $cor-texto-suave;
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.paginacao-info {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    min-width: 70px;
+    text-align: center;
 }

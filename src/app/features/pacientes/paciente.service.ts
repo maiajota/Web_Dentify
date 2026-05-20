@@ -1,10 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_ROUTES } from '../../core/api-routes';
+import { PagedResult } from '../../core/models/paged-result.model';
 import {
     PacienteAtualizar,
     PacienteCadastro,
     PacienteDetalhes,
+    PacienteRequest,
     PacienteResumo,
 } from './paciente.model';
 
@@ -12,8 +14,14 @@ import {
 export class PacienteService {
     private http = inject(HttpClient);
 
-    buscar() {
-        return this.http.get<PacienteResumo[]>(API_ROUTES.pacientes.buscar);
+    buscar(request?: PacienteRequest) {
+        let params = new HttpParams();
+        if (request) {
+            if (request.termo) params = params.set('termo', request.termo);
+            params = params.set('pageNumber', request.pageNumber.toString());
+            params = params.set('pageSize', request.pageSize.toString());
+        }
+        return this.http.get<PagedResult<PacienteResumo>>(API_ROUTES.pacientes.buscar, { params });
     }
 
     buscarPorId(id: number) {

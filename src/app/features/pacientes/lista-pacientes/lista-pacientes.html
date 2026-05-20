@@ -3,24 +3,34 @@
     <div class="cabecalho-pagina">
         <div class="cabecalho-textos">
             <h1 class="cabecalho-titulo">Pacientes</h1>
-            <p class="cabecalho-subtitulo">{{ pacientes().length }} pacientes cadastrados.</p>
+            <p class="cabecalho-subtitulo">{{ totalPacientes() }} pacientes cadastrados.</p>
         </div>
         <button class="botao-novo-paciente" routerLink="/pacientes/novo">
-            <svg lucidePlus></svg>
+            <svg lucidePlus aria-hidden="true"></svg>
             Novo paciente
         </button>
     </div>
 
-    <div class="container-busca">
-        <svg lucideSearch class="busca-icone"></svg>
+    <div class="container-busca" [formGroup]="filtros" role="search" aria-label="Buscar pacientes">
         <input
             pInputText
             class="busca-campo"
-            type="text"
+            type="search"
+            formControlName="termo"
             placeholder="Buscar por nome ou CPF..."
-            [ngModel]="termoBusca()"
-            (ngModelChange)="termoBusca.set($event)"
+            aria-label="Buscar por nome ou CPF"
+            (keyup.enter)="buscar()"
         />
+        <button
+            type="button"
+            class="botao-buscar"
+            pTooltip="Buscar"
+            tooltipPosition="top"
+            aria-label="Buscar"
+            (click)="buscar()"
+        >
+            <svg lucideSearch aria-hidden="true"></svg>
+        </button>
     </div>
 
     <div class="container-tabela">
@@ -35,11 +45,11 @@
             </tr>
             </thead>
             <tbody>
-                @for (paciente of pacientesFiltrados(); track paciente.id) {
+                @for (paciente of pacientes().data; track paciente.id) {
                     <tr class="tabela-linha">
                         <td class="tabela-celula paciente-nome">{{ paciente.nome }}</td>
-                        <td class="tabela-celula celula-secundaria">{{ paciente.cpf }}</td>
-                        <td class="tabela-celula celula-secundaria">{{ paciente.telefone }}</td>
+                        <td class="tabela-celula celula-secundaria">{{ paciente.cpf | cpf }}</td>
+                        <td class="tabela-celula celula-secundaria">{{ paciente.telefone | telefone }}</td>
                         <td class="tabela-celula">
                             <span class="badge-procedimentos">{{ paciente.quantidadeProcedimentos }}</span>
                         </td>
@@ -48,9 +58,10 @@
                                 class="botao-acao"
                                 pTooltip="Ver detalhes"
                                 tooltipPosition="top"
+                                aria-label="Ver detalhes do paciente"
                                 (click)="verPaciente(paciente.id); $event.stopPropagation()"
                             >
-                                <svg lucideEye></svg>
+                                <svg lucideEye aria-hidden="true"></svg>
                             </button>
                         </td>
                     </tr>
@@ -64,5 +75,29 @@
             </tbody>
         </table>
     </div>
+
+    @if (pacientes().totalPages > 1) {
+        <nav class="paginacao" aria-label="Navegação de páginas">
+            <button
+                type="button"
+                class="paginacao-botao"
+                aria-label="Página anterior"
+                [disabled]="pacientes().pageNumber <= 1"
+                (click)="paginaAnterior()"
+            >
+                <svg lucideArrowLeft aria-hidden="true"></svg>
+            </button>
+            <span class="paginacao-info">{{ pacientes().pageNumber }} de {{ pacientes().totalPages }}</span>
+            <button
+                type="button"
+                class="paginacao-botao"
+                aria-label="Próxima página"
+                [disabled]="pacientes().pageNumber >= pacientes().totalPages"
+                (click)="proximaPagina()"
+            >
+                <svg lucideArrowRight aria-hidden="true"></svg>
+            </button>
+        </nav>
+    }
 
 </div>

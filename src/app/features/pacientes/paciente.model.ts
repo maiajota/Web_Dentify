@@ -31,3 +31,9 @@ export interface PacienteAtualizar {
     dataNascimento: Date;
     logradouro: string;
 }
+
+export interface PacienteRequest {
+    termo?: string;
+    pageNumber: number;
+    pageSize: number;
+}

@@ -421,106 +421,113 @@ describe('HistoricoProcedimentoComponent', () => {
         it('não deve exibir a nav quando há apenas uma página', () => {
             expect(el.querySelector('.paginacao')).toBeNull();
         });
+    });
+});
 
-        describe('com múltiplas páginas', () => {
-            beforeEach(async () => {
-                ({ fixture, component, el, procedimentoService } = await criarFixture({
-                    pagedResult: { pageNumber: 1, totalPages: 3, totalItems: 60 },
-                }));
-            });
+describe('HistoricoProcedimentoComponent com múltiplas páginas', () => {
+    let fixture: ComponentFixture<HistoricoProcedimentoComponent>;
+    let component: HistoricoProcedimentoComponent;
+    let el: HTMLElement;
+    let procedimentoService: ProcedimentoServiceMock;
 
-            it('deve exibir a nav de paginação', () => {
-                expect(el.querySelector('.paginacao')).not.toBeNull();
-            });
+    beforeEach(async () => {
+        ({ fixture, component, el, procedimentoService } = await criarFixture({
+            pagedResult: { pageNumber: 1, totalPages: 3, totalItems: 60 },
+        }));
+    });
 
-            it('deve exibir a página atual e o total de páginas', () => {
-                const info = el.querySelector<HTMLElement>('.paginacao-info');
-                expect(info?.textContent?.trim()).toBe('1 de 3');
-            });
+    it('deve exibir a nav de paginação', () => {
+        expect(el.querySelector('.paginacao')).not.toBeNull();
+    });
 
-            it('botão anterior deve estar disabled na primeira página', () => {
-                const botao = el.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
-                expect(botao?.disabled).toBe(true);
-            });
+    it('deve exibir a página atual e o total de páginas', () => {
+        const info = el.querySelector<HTMLElement>('.paginacao-info');
+        expect(info?.textContent?.trim()).toBe('1 de 3');
+    });
 
-            it('botão próximo deve estar enabled na primeira página', () => {
-                const botao = el.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
-                expect(botao?.disabled).toBe(false);
-            });
+    it('botão anterior deve estar disabled na primeira página', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
+        expect(botao?.disabled).toBe(true);
+    });
 
-            it('proximaPagina deve chamar o service com pageNumber incrementado', async () => {
-                component.proximaPagina();
-                await fixture.whenStable();
+    it('botão próximo deve estar enabled na primeira página', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
+        expect(botao?.disabled).toBe(false);
+    });
 
-                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
-                expect(request.pageNumber).toBe(2);
-            });
+    it('proximaPagina deve chamar o service com pageNumber incrementado', async () => {
+        component.proximaPagina();
+        await fixture.whenStable();
 
-            it('paginaAnterior não deve chamar o service quando já está na primeira página', async () => {
-                const chamadasAntes = procedimentoService.buscarPorPaciente.mock.calls.length;
-                component.paginaAnterior();
-                await fixture.whenStable();
-                expect(procedimentoService.buscarPorPaciente.mock.calls.length).toBe(chamadasAntes);
-            });
+        const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+        expect(request.pageNumber).toBe(2);
+    });
 
-            it('paginaAnterior deve chamar o service com pageNumber decrementado', async () => {
-                component.proximaPagina();
-                await fixture.whenStable();
-                component.paginaAnterior();
-                await fixture.whenStable();
+    it('paginaAnterior não deve chamar o service quando já está na primeira página', async () => {
+        const chamadasAntes = procedimentoService.buscarPorPaciente.mock.calls.length;
+        component.paginaAnterior();
+        await fixture.whenStable();
+        expect(procedimentoService.buscarPorPaciente.mock.calls.length).toBe(chamadasAntes);
+    });
 
-                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
-                expect(request.pageNumber).toBe(1);
-            });
+    it('paginaAnterior deve chamar o service com pageNumber decrementado', async () => {
+        component.proximaPagina();
+        await fixture.whenStable();
+        component.paginaAnterior();
+        await fixture.whenStable();
 
-            it('proximaPagina não deve chamar o service quando já está na última página', async () => {
-                component.proximaPagina();
-                await fixture.whenStable();
-                component.proximaPagina();
-                await fixture.whenStable();
+        const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+        expect(request.pageNumber).toBe(1);
+    });
 
-                const chamadasAntes = procedimentoService.buscarPorPaciente.mock.calls.length;
-                component.proximaPagina();
-                await fixture.whenStable();
-                expect(procedimentoService.buscarPorPaciente.mock.calls.length).toBe(chamadasAntes);
-            });
+    it('proximaPagina não deve chamar o service quando já está na última página', async () => {
+        component.proximaPagina();
+        await fixture.whenStable();
+        component.proximaPagina();
+        await fixture.whenStable();
 
-            it('filtrar deve resetar para a primeira página', async () => {
-                component.proximaPagina();
-                await fixture.whenStable();
-                component.filtrar();
-                await fixture.whenStable();
+        const chamadasAntes = procedimentoService.buscarPorPaciente.mock.calls.length;
+        component.proximaPagina();
+        await fixture.whenStable();
+        expect(procedimentoService.buscarPorPaciente.mock.calls.length).toBe(chamadasAntes);
+    });
 
-                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
-                expect(request.pageNumber).toBe(1);
-            });
+    it('filtrar deve resetar para a primeira página', async () => {
+        component.proximaPagina();
+        await fixture.whenStable();
+        component.filtrar();
+        await fixture.whenStable();
 
-            it('limparFiltros deve resetar para a primeira página', async () => {
-                component.proximaPagina();
-                await fixture.whenStable();
-                component.limparFiltros();
-                await fixture.whenStable();
+        const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+        expect(request.pageNumber).toBe(1);
+    });
 
-                const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
-                expect(request.pageNumber).toBe(1);
-            });
-        });
+    it('limparFiltros deve resetar para a primeira página', async () => {
+        component.proximaPagina();
+        await fixture.whenStable();
+        component.limparFiltros();
+        await fixture.whenStable();
 
-        it('botão próximo deve estar disabled na última página', async () => {
-            const { el: elUltima } = await criarFixture({
-                pagedResult: { pageNumber: 3, totalPages: 3, totalItems: 60 },
-            });
-            const botao = elUltima.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
-            expect(botao?.disabled).toBe(true);
-        });
+        const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
+        expect(request.pageNumber).toBe(1);
+    });
+});
 
-        it('botão anterior deve estar enabled na última página', async () => {
-            const { el: elUltima } = await criarFixture({
-                pagedResult: { pageNumber: 3, totalPages: 3, totalItems: 60 },
-            });
-            const botao = elUltima.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
-            expect(botao?.disabled).toBe(false);
-        });
+describe('HistoricoProcedimentoComponent na última página', () => {
+    let el: HTMLElement;
+
+    beforeEach(async () => {
+        ({ el } = await criarFixture({ pagedResult: { pageNumber: 3, totalPages: 3, totalItems: 60 } }));
+    });
+
+    it('botão próximo deve estar disabled', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
+        expect(botao?.disabled).toBe(true);
+    });
+
+    it('botão anterior deve estar enabled', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
+        expect(botao?.disabled).toBe(false);
     });
 });
 
