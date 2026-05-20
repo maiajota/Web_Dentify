@@ -1,5 +1,7 @@
 @use 'variables' as *;
 
+@layer primeng;
+
 *, *::before, *::after {
     box-sizing: border-box;
 }

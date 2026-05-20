@@ -1,0 +1,529 @@
+@use 'sass:color';
+@use 'variables' as *;
+
+.pagina-historico {
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.botao-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: $cor-texto-suave;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    width: fit-content;
+    padding: 6px 0;
+    transition: color 0.15s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        color: $azul-primario;
+    }
+}
+
+.historico-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.historico-cabecalho-textos {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.historico-titulo {
+    font-size: 22px;
+    font-weight: 700;
+    color: $cor-texto-escuro;
+    margin: 0;
+}
+
+.historico-subtitulo {
+    font-size: 13px;
+    color: $cor-texto-suave;
+    margin: 0;
+}
+
+.botao-novo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: $azul-primario;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.30);
+    transition: background 0.15s, box-shadow 0.15s;
+
+    &:hover {
+        background: color.adjust($azul-primario, $lightness: -8%);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.40);
+    }
+}
+
+.filtros {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filtro-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.botao-filtrar {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: $azul-primario;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: color.adjust($azul-primario, $lightness: -8%);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.botao-limpar {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: transparent;
+    color: $cor-texto-suave;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $cor-texto-escuro;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.card-procedimentos {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid $cor-borda;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.lista-procedimentos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item-procedimento {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid $cor-borda;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover .botao-acao {
+        opacity: 1;
+    }
+}
+
+.procedimento-acoes {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.botao-acao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid $cor-borda;
+    border-radius: 6px;
+    color: $cor-texto-suave;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+
+    svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $azul-primario;
+        border-color: $azul-primario;
+    }
+
+    &--perigo:hover {
+        color: #dc2626;
+        border-color: #dc2626;
+        background: #fef2f2;
+    }
+
+    &:focus-visible {
+        opacity: 1;
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.paginacao-botao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    color: $cor-texto-escuro;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+        background: $cor-fundo-app;
+        border-color: $azul-primario;
+        color: $azul-primario;
+    }
+
+    &:disabled {
+        color: $cor-texto-suave;
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.paginacao-info {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    min-width: 70px;
+    text-align: center;
+}
+
+.modal--confirmacao {
+    max-width: 420px;
+}
+
+.modal-confirmacao-texto {
+    padding: 20px 24px 0;
+    margin: 0;
+    font-size: 14px;
+    color: $cor-texto-escuro;
+    line-height: 1.6;
+}
+
+.modal-acoes--confirmacao {
+    padding: 20px 24px 24px;
+}
+
+.botao-excluir {
+    padding: 8px 16px;
+    background: $azul-primario;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover:not(:disabled) {
+        background: color.adjust($azul-primario, $lightness: -8%);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.procedimento-data {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    white-space: nowrap;
+    min-width: 90px;
+    padding-top: 1px;
+}
+
+.procedimento-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.procedimento-descricao {
+    font-size: 14px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+}
+
+.procedimento-convenio {
+    font-size: 13px;
+    font-weight: 500;
+    color: $azul-primario;
+}
+
+.procedimentos-vazios {
+    text-align: center;
+    padding: 48px 24px;
+    color: $cor-texto-suave;
+    font-size: 14px;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid $cor-borda;
+}
+
+.modal-titulo {
+    font-size: 16px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+    margin: 0;
+}
+
+.modal-fechar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: $cor-texto-suave;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $cor-texto-escuro;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-escuro;
+}
+
+@mixin campo-base {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    font-size: 14px;
+    color: $cor-texto-escuro;
+    background: white;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+    font-family: inherit;
+
+    &:focus {
+        border-color: $azul-primario;
+        box-shadow: 0 0 0 3px rgba($azul-primario, 0.1);
+    }
+}
+
+.campo-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.campo-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 96px;
+}
+
+.campo-select {
+    @include campo-base;
+    cursor: pointer;
+}
+
+.modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.botao-cancelar {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $cor-texto-escuro;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.botao-salvar {
+    padding: 8px 16px;
+    background: $azul-primario;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover:not(:disabled) {
+        background: color.adjust($azul-primario, $lightness: -8%);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}

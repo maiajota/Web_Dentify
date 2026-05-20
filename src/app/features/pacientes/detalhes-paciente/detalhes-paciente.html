@@ -1,0 +1,74 @@
+<div class="pagina-detalhes">
+    @if (paciente(); as p) {
+
+        <div class="header-textos">
+            <h1 class="paciente-nome">{{ p.nome }}</h1>
+        </div>
+
+        <div class="grade-info" role="list" aria-label="Informações do paciente">
+            <div class="card-info" role="listitem">
+                <div class="card-info-titulo">
+                    <svg lucideCreditCard class="card-info-icone" aria-hidden="true"></svg>
+                    <span class="card-info-label">CPF</span>
+                </div>
+                <span class="card-info-valor">{{ p.cpf | cpf }}</span>
+            </div>
+            <div class="card-info" role="listitem">
+                <div class="card-info-titulo">
+                    <svg lucideCalendar class="card-info-icone" aria-hidden="true"></svg>
+                    <span class="card-info-label">Nascimento</span>
+                </div>
+                <span class="card-info-valor">{{ p.dataNascimento | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="card-info" role="listitem">
+                <div class="card-info-titulo">
+                    <svg lucidePhone class="card-info-icone" aria-hidden="true"></svg>
+                    <span class="card-info-label">Telefone</span>
+                </div>
+                <span class="card-info-valor">{{ p.telefone | telefone }}</span>
+            </div>
+            <div class="card-info -grande" role="listitem">
+                <div class="card-info-titulo">
+                    <svg lucideMapPin class="card-info-icone" aria-hidden="true"></svg>
+                    <span class="card-info-label">Logradouro</span>
+                </div>
+                <span class="card-info-valor">{{ p.logradouro }}</span>
+            </div>
+        </div>
+
+        <section class="card-procedimentos" aria-label="Últimos procedimentos">
+            <div class="card-procedimentos-header">
+                <div class="procedimentos-cabecalho-textos">
+                    <h2 class="procedimentos-titulo">Últimos procedimentos</h2>
+                    <p class="procedimentos-subtitulo">
+                        Mostrando os {{ ultimosProcedimentos().length }} mais recentes de {{ p.quantidadeProcedimentos }}
+                    </p>
+                </div>
+                <a
+                    class="botao-historico"
+                    [routerLink]="['/pacientes', paciente()?.id, 'procedimentos']"
+                    aria-label="Ver histórico completo de procedimentos"
+                >
+                    <svg lucideClipboardClock aria-hidden="true"></svg>
+                    Ver histórico completo
+                </a>
+            </div>
+
+            <ul class="lista-procedimentos">
+                @for (proc of ultimosProcedimentos(); track proc.id) {
+                    <li class="item-procedimento">
+                        <span class="procedimento-data">{{ proc.dataProcedimento | date:'dd/MM/yyyy' }}</span>
+                        <div class="procedimento-info">
+                            <strong class="procedimento-descricao">{{ proc.descricao }}</strong>
+                            <span class="procedimento-convenio">{{ proc.convenioNome }}</span>
+                        </div>
+                    </li>
+                } @empty {
+                    <li class="procedimentos-vazios">Nenhum procedimento registrado.</li>
+                }
+            </ul>
+        </section>
+
+    }
+
+</div>

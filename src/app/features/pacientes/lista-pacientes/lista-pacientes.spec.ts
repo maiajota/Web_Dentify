@@ -3,42 +3,46 @@ import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { ListaPacientesComponent } from './lista-pacientes';
-import { PacientesService } from '../pacientes.service';
-import { Paciente } from '../paciente.model';
+import { PacienteService } from '../paciente.service';
+import { PacienteRequest, PacienteResumo } from '../paciente.model';
+import { PagedResult } from '../../../core/models/paged-result.model';
 
-const PACIENTES_MOCK: Paciente[] = [
-    {
-        id: 1,
-        nome: 'João Victor',
-        cpf: '123.456.789-00',
-        telefone: '(11) 91111-1111',
-        DataNascimento: new Date('1990-01-15'),
-        logradouro: 'Rua A, 100',
-        usuarioId: 1,
-    },
-    {
-        id: 2,
-        nome: 'Maria Laura',
-        cpf: '987.654.321-00',
-        telefone: '(11) 92222-2222',
-        DataNascimento: new Date('1985-06-20'),
-        logradouro: 'Rua B, 200',
-        usuarioId: 1,
-    },
-    {
-        id: 3,
-        nome: 'Diana Maia',
-        cpf: '111.222.333-44',
-        telefone: '(11) 93333-3333',
-        DataNascimento: new Date('1978-12-01'),
-        logradouro: 'Rua C, 300',
-        usuarioId: 1,
-    },
+const PACIENTES_MOCK: PacienteResumo[] = [
+    { id: 1, nome: 'João Victor', cpf: '12345678900', telefone: '11911111111', quantidadeProcedimentos: 2 },
+    { id: 2, nome: 'Maria Laura', cpf: '98765432100', telefone: '11922222222', quantidadeProcedimentos: 4 },
+    { id: 3, nome: 'Diana Maia', cpf: '11122233344', telefone: '11933333333', quantidadeProcedimentos: 0 },
 ];
+
+function pagedResult(overrides?: Partial<PagedResult<PacienteResumo>>): PagedResult<PacienteResumo> {
+    return { data: PACIENTES_MOCK, pageNumber: 1, pageSize: 20, totalItems: 3, totalPages: 1, ...overrides };
+}
 
 function contarLinhas(el: HTMLElement): NodeListOf<HTMLElement> {
     return el.querySelectorAll<HTMLElement>('tbody tr.tabela-linha');
 }
+
+async function criarFixture(result = pagedResult()) {
+    const pacientesService = { buscar: vi.fn().mockReturnValue(of(result)) };
+
+    await TestBed.configureTestingModule({
+        imports: [ListaPacientesComponent],
+        providers: [
+            provideRouter([]),
+            { provide: PacienteService, useValue: pacientesService },
+        ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(ListaPacientesComponent);
+    const component = fixture.componentInstance;
+    const router = TestBed.inject(Router);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+
+    return { fixture, component, router, el, pacientesService };
+}
+
+// ─── cenário padrão (3 pacientes, 1 página) ──────────────────────────────────
 
 describe('ListaPacientesComponent', () => {
     let fixture: ComponentFixture<ListaPacientesComponent>;
@@ -48,144 +52,159 @@ describe('ListaPacientesComponent', () => {
     let el: HTMLElement;
 
     beforeEach(async () => {
-        pacientesService = {
-            buscar: vi.fn().mockReturnValue(of(PACIENTES_MOCK)),
-        };
-
-        await TestBed.configureTestingModule({
-            imports: [ListaPacientesComponent],
-            providers: [
-                provideRouter([]),
-                { provide: PacientesService, useValue: pacientesService },
-            ],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(ListaPacientesComponent);
-        component = fixture.componentInstance;
-        router = TestBed.inject(Router);
-        await fixture.whenStable();
-        fixture.detectChanges();
-        el = el as HTMLElement;
+        ({ fixture, component, router, el, pacientesService } = await criarFixture());
     });
 
-    it('should create', () => {
+    it('deve criar o componente', () => {
         expect(component).toBeTruthy();
     });
 
     describe('renderização', () => {
-        it('should display one row per patient', () => {
+        it('deve exibir uma linha por paciente', () => {
             expect(contarLinhas(el).length).toBe(3);
         });
 
-        it('should show correct patient count in the subtitle', () => {
+        it('deve exibir o total de pacientes no subtítulo', () => {
             const subtitulo = el.querySelector<HTMLElement>('.cabecalho-subtitulo');
             expect(subtitulo?.textContent).toContain('3 pacientes cadastrados');
         });
 
-        it('should display patient name and CPF in the row', () => {
-            const primeiraLinha = contarLinhas(el)[0];
-            expect(primeiraLinha.textContent).toContain('João Victor');
-            expect(primeiraLinha.textContent).toContain('123.456.789-00');
+        it('deve exibir o nome do paciente na linha', () => {
+            expect(contarLinhas(el)[0].textContent).toContain('João Victor');
+        });
+
+        it('deve exibir a quantidade de procedimentos em um badge', () => {
+            const badge = contarLinhas(el)[0].querySelector<HTMLElement>('.badge-procedimentos');
+            expect(badge?.textContent?.trim()).toBe('2');
+        });
+
+        it('não deve exibir a nav de paginação quando há apenas uma página', () => {
+            expect(el.querySelector('.paginacao')).toBeNull();
         });
     });
 
-    describe('filtro', () => {
-        it('should show all patients when the search term is empty', () => {
-            component.termoBusca.set('');
-            fixture.detectChanges();
-            expect(contarLinhas(el).length).toBe(3);
+    describe('buscar()', () => {
+        it('deve chamar o serviço com o termo preenchido', () => {
+            component.filtros.patchValue({ termo: 'João' });
+            component.buscar();
+            const req = pacientesService.buscar.mock.calls.at(-1)?.[0] as PacienteRequest;
+            expect(req.termo).toBe('João');
         });
 
-        it('should filter by name (case insensitive)', () => {
-            component.termoBusca.set('joão');
-            fixture.detectChanges();
-            const linhas = contarLinhas(el);
-            expect(linhas.length).toBe(1);
-            expect(linhas[0].textContent).toContain('João Victor');
+        it('deve enviar termo undefined quando o campo está vazio', () => {
+            component.filtros.patchValue({ termo: '' });
+            component.buscar();
+            const req = pacientesService.buscar.mock.calls.at(-1)?.[0] as PacienteRequest;
+            expect(req.termo).toBeUndefined();
         });
 
-        it('should filter by CPF', () => {
-            component.termoBusca.set('987.654');
-            fixture.detectChanges();
-            const linhas = contarLinhas(el);
-            expect(linhas.length).toBe(1);
-            expect(linhas[0].textContent).toContain('Maria Laura');
-        });
-
-        it('should show empty state when no patient matches', () => {
-            component.termoBusca.set('zzz-nao-existe');
-            fixture.detectChanges();
-            expect(contarLinhas(el).length).toBe(0);
-            const vazia = el.querySelector<HTMLElement>('.tabela-vazia');
-            expect(vazia?.textContent).toContain('Nenhum paciente encontrado.');
-        });
-
-        it('should restore full list when search term is cleared', () => {
-            component.termoBusca.set('joão');
-            fixture.detectChanges();
-            component.termoBusca.set('');
-            fixture.detectChanges();
-            expect(contarLinhas(el).length).toBe(3);
-        });
-
-        it('should ignore leading/trailing whitespace in the search term', () => {
-            component.termoBusca.set('  maria  ');
-            fixture.detectChanges();
-            expect(contarLinhas(el).length).toBe(1);
+        it('deve resetar para a primeira página ao buscar', () => {
+            component.filtros.patchValue({ termo: 'João' });
+            component.buscar();
+            const req = pacientesService.buscar.mock.calls.at(-1)?.[0] as PacienteRequest;
+            expect(req.pageNumber).toBe(1);
         });
     });
 
     describe('navegação', () => {
-        it('should navigate to the patient detail route when verPaciente() is called', () => {
+        it('deve navegar para a rota de detalhe ao chamar verPaciente()', () => {
             const navegar = vi.spyOn(router, 'navigate');
             component.verPaciente(2);
             expect(navegar).toHaveBeenCalledWith(['/pacientes', 2]);
         });
 
-        it('should navigate when a table row is clicked', () => {
+        it('deve navegar ao clicar no botão "Ver detalhes"', () => {
             const navegar = vi.spyOn(router, 'navigate');
-            const primeiraLinha = contarLinhas(el)[0];
-            primeiraLinha.click();
-            expect(navegar).toHaveBeenCalledWith(['/pacientes', 1]);
-        });
-
-        it('should navigate when the "Ver detalhes" button is clicked', () => {
-            const navegar = vi.spyOn(router, 'navigate');
-            // O botão de detalhes é o primeiro botão de ação da linha
-            const botaoDetalhes = el.querySelector<HTMLButtonElement>('.botao-acao');
-            botaoDetalhes?.click();
+            el.querySelector<HTMLButtonElement>('.botao-acao')?.click();
             expect(navegar).toHaveBeenCalledWith(['/pacientes', 1]);
         });
     });
 });
 
+// ─── cenário sem pacientes ────────────────────────────────────────────────────
+
 describe('ListaPacientesComponent sem pacientes', () => {
-    let fixture: ComponentFixture<ListaPacientesComponent>;
     let el: HTMLElement;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [ListaPacientesComponent],
-            providers: [
-                provideRouter([]),
-                { provide: PacientesService, useValue: { buscar: vi.fn().mockReturnValue(of([])) } },
-            ],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(ListaPacientesComponent);
-        await fixture.whenStable();
-        fixture.detectChanges();
-        el = fixture.nativeElement as HTMLElement;
+        ({ el } = await criarFixture(pagedResult({ data: [], totalItems: 0 })));
     });
 
-    it('should show empty state when the service returns no patients', () => {
+    it('deve exibir o estado vazio', () => {
         const vazia = el.querySelector<HTMLElement>('.tabela-vazia');
-        expect(vazia).toBeTruthy();
+        expect(vazia).not.toBeNull();
         expect(vazia?.textContent).toContain('Nenhum paciente encontrado.');
     });
+});
 
-    it('should show 0 patients in the subtitle', () => {
-        const subtitulo = el.querySelector<HTMLElement>('.cabecalho-subtitulo');
-        expect(subtitulo?.textContent).toContain('0 pacientes cadastrados');
+// ─── cenário com múltiplas páginas (página 1 de 3) ───────────────────────────
+
+describe('ListaPacientesComponent com múltiplas páginas', () => {
+    let component: ListaPacientesComponent;
+    let pacientesService: { buscar: ReturnType<typeof vi.fn> };
+    let el: HTMLElement;
+
+    beforeEach(async () => {
+        ({ component, el, pacientesService } = await criarFixture(
+            pagedResult({ pageNumber: 1, totalPages: 3, totalItems: 60 }),
+        ));
+    });
+
+    it('deve exibir a nav de paginação', () => {
+        expect(el.querySelector('.paginacao')).not.toBeNull();
+    });
+
+    it('deve exibir a página atual e o total de páginas', () => {
+        const info = el.querySelector<HTMLElement>('.paginacao-info');
+        expect(info?.textContent?.trim()).toBe('1 de 3');
+    });
+
+    it('botão anterior deve estar disabled na primeira página', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
+        expect(botao?.disabled).toBe(true);
+    });
+
+    it('botão próximo deve estar enabled na primeira página', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
+        expect(botao?.disabled).toBe(false);
+    });
+
+    it('proximaPagina deve chamar o service com pageNumber incrementado', () => {
+        component.proximaPagina();
+        const req = pacientesService.buscar.mock.calls.at(-1)?.[0] as PacienteRequest;
+        expect(req.pageNumber).toBe(2);
+    });
+
+    it('paginaAnterior não deve chamar o service quando já está na primeira página', () => {
+        const chamadasAntes = pacientesService.buscar.mock.calls.length;
+        component.paginaAnterior();
+        expect(pacientesService.buscar.mock.calls.length).toBe(chamadasAntes);
+    });
+
+    it('paginaAnterior deve chamar o service com pageNumber decrementado', () => {
+        component.proximaPagina();
+        component.paginaAnterior();
+        const req = pacientesService.buscar.mock.calls.at(-1)?.[0] as PacienteRequest;
+        expect(req.pageNumber).toBe(1);
+    });
+});
+
+// ─── cenário na última página ─────────────────────────────────────────────────
+
+describe('ListaPacientesComponent na última página', () => {
+    let el: HTMLElement;
+
+    beforeEach(async () => {
+        ({ el } = await criarFixture(pagedResult({ pageNumber: 3, totalPages: 3, totalItems: 60 })));
+    });
+
+    it('botão próximo deve estar disabled', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Próxima página"]');
+        expect(botao?.disabled).toBe(true);
+    });
+
+    it('botão anterior deve estar enabled', () => {
+        const botao = el.querySelector<HTMLButtonElement>('[aria-label="Página anterior"]');
+        expect(botao?.disabled).toBe(false);
     });
 });

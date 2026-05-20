@@ -23,6 +23,28 @@ export const routes: Routes = [
                         (m) => m.ListaPacientesComponent,
                     ),
             },
+            {
+                path: 'pacientes/novo',
+                loadComponent: () =>
+                    import('./features/pacientes/novo-paciente/novo-paciente').then(
+                        (m) => m.NovoPacienteComponent,
+                    ),
+            },
+            {
+                path: 'pacientes/:id',
+                loadComponent: () =>
+                    import(
+                        './features/pacientes/detalhes-paciente/detalhes-paciente').then(
+                        (m) => m.DetalhesPacienteComponent,
+                    ),
+            },
+            {
+                path: 'pacientes/:id/procedimentos',
+                loadComponent: () =>
+                    import('./features/procedimentos/historico-procedimento/historico-procedimento').then(
+                        (m) => m.HistoricoProcedimentoComponent,
+                    ),
+            },
         ],
     },
 ];

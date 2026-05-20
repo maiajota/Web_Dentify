@@ -1,0 +1,100 @@
+<div class="pagina-novo-paciente">
+
+    <div class="cabecalho-pagina">
+        <div class="cabecalho-textos">
+            <h1 class="cabecalho-titulo">Novo Paciente</h1>
+            <p class="cabecalho-subtitulo">Preencha os dados básicos do paciente.</p>
+        </div>
+    </div>
+
+    <div class="container-formulario">
+        <form [formGroup]="form" (ngSubmit)="salvar()" class="formulario">
+            <div class="campo-grupo campo-grupo-completo">
+                <label class="campo-label" for="nome">Nome completo *</label>
+                <input
+                    pInputText
+                    id="nome"
+                    type="text"
+                    class="campo-input"
+                    formControlName="nome"
+                    placeholder="Ex: Maria Laura Maia"
+                    autocomplete="off"
+                    maxlength="100"
+                />
+            </div>
+
+            <div class="formulario-linha">
+                <div class="campo-grupo">
+                    <label class="campo-label" for="cpf">CPF *</label>
+                    <input
+                        pInputText
+                        id="cpf"
+                        type="text"
+                        class="campo-input"
+                        formControlName="cpf"
+                        placeholder="000.000.000-00"
+                        maxlength="14"
+                        autocomplete="off"
+                        appCpfMask
+                    />
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label" for="telefone">Telefone *</label>
+                    <input
+                        pInputText
+                        id="telefone"
+                        type="tel"
+                        class="campo-input"
+                        formControlName="telefone"
+                        placeholder="(00) 00000-0000"
+                        maxlength="15"
+                        autocomplete="off"
+                        appTelefoneMask
+                    />
+                </div>
+            </div>
+
+            <div class="formulario-linha">
+                <div class="campo-grupo">
+                    <label class="campo-label" for="dataNascimento">Data de nascimento *</label>
+                    <p-datePicker
+                        inputId="dataNascimento"
+                        formControlName="dataNascimento"
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                        appendTo="body"
+                    >
+                    </p-datePicker>
+                </div>
+                <div class="campo-grupo">
+                    <label class="campo-label" for="logradouro">Logradouro *</label>
+                    <input
+                        pInputText
+                        id="logradouro"
+                        type="text"
+                        class="campo-input"
+                        formControlName="logradouro"
+                        autocomplete="off"
+                        maxlength="200"
+                    />
+                </div>
+            </div>
+
+            <div class="formulario-acoes">
+                <button type="button" class="botao-cancelar" routerLink="/pacientes">
+                    Cancelar
+                </button>
+                <button
+                    type="submit"
+                    class="botao-salvar"
+                    [disabled]="form.invalid || salvando()"
+                >
+                    <svg lucideSave></svg>
+                    Salvar Paciente
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<p-toast />
