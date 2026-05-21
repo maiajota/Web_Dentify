@@ -1,6 +1,6 @@
 @use '../../../../styles/variables' as *;
 
-.pagina-login {
+.pagina-cadastro {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -9,7 +9,7 @@
     padding: 24px;
 }
 
-.card-login {
+.card-cadastro {
     background: #ffffff;
     border: 1px solid $cor-borda;
     border-radius: 12px;
@@ -18,14 +18,14 @@
     max-width: 400px;
 }
 
-.login-marca {
+.cadastro-marca {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 32px;
 }
 
-.login-logo {
+.cadastro-logo {
     width: 36px;
     height: 36px;
     background: $azul-primario;
@@ -38,26 +38,26 @@
     font-size: 18px;
 }
 
-.login-nome {
+.cadastro-nome {
     font-size: 20px;
     font-weight: 700;
     color: $cor-texto-escuro;
 }
 
-.login-titulo {
+.cadastro-titulo {
     font-size: 22px;
     font-weight: 600;
     color: $cor-texto-escuro;
     margin: 0 0 6px;
 }
 
-.login-subtitulo {
+.cadastro-subtitulo {
     font-size: 14px;
     color: $cor-texto-suave;
     margin: 0 0 28px;
 }
 
-.login-form {
+.cadastro-form {
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -110,33 +110,7 @@
     color: #ef4444;
 }
 
-.alerta-erro {
-    padding: 10px 14px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 8px;
-    font-size: 13px;
-    color: #dc2626;
-}
-
-.link-cadastro {
-    text-align: center;
-    font-size: 13px;
-    color: $cor-texto-suave;
-    margin: 0;
-}
-
-.link-texto {
-    color: $azul-primario;
-    text-decoration: none;
-    font-weight: 500;
-
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
-.botao-entrar {
+.botao-principal {
     height: 42px;
     background: $azul-primario;
     color: #ffffff;
@@ -155,5 +129,57 @@
     &:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+    }
+}
+
+.link-login {
+    text-align: center;
+    font-size: 13px;
+    color: $cor-texto-suave;
+    margin: 0;
+}
+
+.link-texto {
+    color: $azul-primario;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideIn 0.2s ease;
+
+    &--sucesso {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+    }
+
+    &--erro {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

@@ -8,6 +8,11 @@ export const routes: Routes = [
             import('./features/auth/login/login').then((m) => m.LoginComponent),
     },
     {
+        path: 'cadastro',
+        loadComponent: () =>
+            import('./features/auth/cadastro/cadastro').then((m) => m.CadastroComponent),
+    },
+    {
         path: '',
         component: LayoutPrincipalComponent,
         children: [

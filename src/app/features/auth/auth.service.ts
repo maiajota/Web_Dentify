@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { API_ROUTES } from '../../core/api-routes';
-import { LoginRequest } from './auth.model';
+import { CreateUsuarioRequest, LoginRequest } from './auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -16,6 +16,10 @@ export class AuthService {
     return this.http
       .post<void>(API_ROUTES.auth.login, credenciais)
       .pipe(tap(() => this.isAutenticado.set(true)));
+  }
+
+  cadastrar(dados: CreateUsuarioRequest) {
+    return this.http.post<void>(API_ROUTES.usuario.cadastro, dados);
   }
 
   logout() {
