@@ -57,6 +57,10 @@
             <button class="botao-entrar" type="submit" [disabled]="carregando()">
                 @if (carregando()) { Entrando... } @else { Entrar }
             </button>
+
+            <p class="link-cadastro">
+                Não tem uma conta? <a routerLink="/cadastro" class="link-texto">Cadastre-se</a>
+            </p>
         </form>
     </div>
 </div>

@@ -6,6 +6,10 @@ export const API_ROUTES = {
     auth: {
         login: `${BASE}/api/Autenticacao/login`,
         logout: `${BASE}/api/Autenticacao/logout`,
+        cadastro: `${BASE}/api/Autenticacao/cadastro`,
+    },
+    usuario: {
+        cadastro: `${BASE}/api/Usuario/adicionar`,
     },
     pacientes: {
         buscar: `${BASE}/api/Paciente/buscar`,
@@ -15,7 +19,6 @@ export const API_ROUTES = {
         remover: (id: number) => `${BASE}/api/Paciente/remover/${id}`,
     },
     procedimentos: {
-        buscar: (procedimentoId: number) =>`${BASE}/api/Paciente/procedimentos/buscar/${procedimentoId}`,
         buscarPorId: (pacienteId: number) => `${BASE}/api/Procedimento/buscarTodos/${pacienteId}`,
         buscarRecentes: (pacienteId: number, quantidade: number) => `${BASE}/api/Procedimento/buscarRecentes/${pacienteId}?quantidade=${quantidade}`,
         adicionar: `${BASE}/api/Procedimento/adicionar`,

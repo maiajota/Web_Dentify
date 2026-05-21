@@ -1,0 +1,142 @@
+<div class="pagina-cadastro">
+    <div class="card-cadastro">
+        <div class="cadastro-marca">
+            <span class="cadastro-logo">D</span>
+            <span class="cadastro-nome">Dentify</span>
+        </div>
+
+        <h1 class="cadastro-titulo">Criar conta</h1>
+        <p class="cadastro-subtitulo">
+            @if (passo() === 1) { Preencha seus dados para começar. }
+            @else { Agora crie uma senha para sua conta. }
+        </p>
+
+        <form class="cadastro-form" [formGroup]="form">
+            @if (passo() === 1) {
+                <div class="campo-grupo">
+                    <label class="campo-label" for="nome">Nome</label>
+                    <input
+                        id="nome"
+                        class="campo-input"
+                        [class.campo-input--erro]="nomeCtrl.invalid && nomeCtrl.touched"
+                        type="text"
+                        placeholder="Seu nome completo"
+                        formControlName="nome"
+                        autocomplete="name"
+                        aria-describedby="nome-erro"
+                    />
+                    @if (nomeCtrl.invalid && nomeCtrl.touched) {
+                        <span id="nome-erro" class="campo-erro" role="alert">
+                            O nome é obrigatório.
+                        </span>
+                    }
+                </div>
+
+                <div class="campo-grupo">
+                    <label class="campo-label" for="cpf">CPF</label>
+                    <input
+                        id="cpf"
+                        class="campo-input"
+                        [class.campo-input--erro]="cpfCtrl.invalid && cpfCtrl.touched"
+                        type="text"
+                        placeholder="000.000.000-00"
+                        formControlName="cpf"
+                        appCpfMask
+                        inputmode="numeric"
+                        aria-describedby="cpf-erro"
+                    />
+                    @if (cpfCtrl.invalid && cpfCtrl.touched) {
+                        <span id="cpf-erro" class="campo-erro" role="alert">
+                            O CPF é obrigatório.
+                        </span>
+                    }
+                </div>
+
+                <div class="campo-grupo">
+                    <label class="campo-label" for="email">E-mail</label>
+                    <input
+                        id="email"
+                        class="campo-input"
+                        [class.campo-input--erro]="emailCtrl.invalid && emailCtrl.touched"
+                        type="email"
+                        placeholder="seu@email.com"
+                        formControlName="email"
+                        autocomplete="email"
+                        aria-describedby="email-erro"
+                    />
+                    @if (emailCtrl.invalid && emailCtrl.touched) {
+                        <span id="email-erro" class="campo-erro" role="alert">
+                            @if (emailCtrl.hasError('required')) { O e-mail é obrigatório. }
+                            @else { Insira um e-mail válido. }
+                        </span>
+                    }
+                </div>
+
+                <button class="botao-principal" type="button" (click)="avancar()">
+                    Avançar
+                </button>
+            }
+
+            @if (passo() === 2) {
+                <div class="campo-grupo">
+                    <label class="campo-label" for="senha">Senha</label>
+                    <input
+                        id="senha"
+                        class="campo-input"
+                        [class.campo-input--erro]="senhaCtrl.invalid && senhaCtrl.touched"
+                        type="password"
+                        placeholder="••••••••"
+                        formControlName="senha"
+                        autocomplete="new-password"
+                        aria-describedby="senha-erro"
+                    />
+                    @if (senhaCtrl.invalid && senhaCtrl.touched) {
+                        <span id="senha-erro" class="campo-erro" role="alert">
+                            @if (senhaCtrl.hasError('required')) { A senha é obrigatória. }
+                            @else { A senha deve ter no mínimo 6 caracteres. }
+                        </span>
+                    }
+                </div>
+
+                <div class="campo-grupo">
+                    <label class="campo-label" for="confirmar-senha">Confirmar senha</label>
+                    <input
+                        id="confirmar-senha"
+                        class="campo-input"
+                        [class.campo-input--erro]="confirmarSenhaCtrl.invalid && confirmarSenhaCtrl.touched"
+                        type="password"
+                        placeholder="••••••••"
+                        formControlName="confirmarSenha"
+                        autocomplete="new-password"
+                        aria-describedby="confirmar-senha-erro"
+                    />
+                    @if (confirmarSenhaCtrl.invalid && confirmarSenhaCtrl.touched) {
+                        <span id="confirmar-senha-erro" class="campo-erro" role="alert">
+                            A confirmação de senha é obrigatória.
+                        </span>
+                    }
+                </div>
+
+                <button class="botao-principal" type="button" [disabled]="carregando()" (click)="cadastrar()">
+                    @if (carregando()) { Cadastrando... } @else { Cadastrar }
+                </button>
+            }
+
+            <p class="link-login">
+                Já tem uma conta? <a routerLink="/login" class="link-texto">Entrar</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+@if (toast()) {
+    <div
+        class="toast"
+        [class.toast--sucesso]="toast()!.tipo === 'sucesso'"
+        [class.toast--erro]="toast()!.tipo === 'erro'"
+        role="alert"
+        aria-live="polite"
+    >
+        {{ toast()!.texto }}
+    </div>
+}
