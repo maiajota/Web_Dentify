@@ -33,7 +33,7 @@ export class PacienteService {
     }
 
     atualizar(id: number, paciente: Partial<Omit<PacienteAtualizar, 'id'>>) {
-        return this.http.put<PacienteAtualizar>(API_ROUTES.pacientes.atualizar(id), paciente);
+        return this.http.patch<PacienteAtualizar>(API_ROUTES.pacientes.atualizar(id), paciente);
     }
 
     remover(id: number) {
