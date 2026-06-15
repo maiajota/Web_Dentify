@@ -413,29 +413,3 @@
         outline-offset: 2px;
     }
 }
-
-.botao-salvar {
-    padding: 8px 16px;
-    background: $azul-primario;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: white;
-    cursor: pointer;
-    transition: background 0.15s;
-
-    &:hover:not(:disabled) {
-        background: color.adjust($azul-primario, $lightness: -8%);
-    }
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    &:focus-visible {
-        outline: 2px solid $azul-primario;
-        outline-offset: 2px;
-    }
-}

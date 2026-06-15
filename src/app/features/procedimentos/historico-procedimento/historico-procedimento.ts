@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { NovoProcedimentoModalComponent } from '../novo-procedimento-modal/novo-procedimento-modal';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -40,6 +41,7 @@ import { Convenio } from '../../convenios/convenio.model';
         Textarea,
         Tooltip,
         ToastModule,
+        NovoProcedimentoModalComponent,
     ],
     providers: [MessageService],
     templateUrl: './historico-procedimento.html',
@@ -57,6 +59,7 @@ export class HistoricoProcedimentoComponent {
     private refresh$ = new BehaviorSubject<void>(undefined);
     private filtroParams$ = new BehaviorSubject<ProcedimentoRequest>({ pageNumber: 1, pageSize: 20 });
 
+    novoModalAberto = signal(false);
     modalAberta = signal(false);
     salvando = signal(false);
     removendo = signal(false);
@@ -120,10 +123,14 @@ export class HistoricoProcedimentoComponent {
         this.filtroParams$.next({ pageNumber: 1, pageSize: 20 });
     }
 
-    abrirModal(): void {
-        this.procedimentoEmEdicao.set(null);
-        this.form.reset({ dataProcedimento: new Date(), descricao: '', convenioId: null });
-        this.modalAberta.set(true);
+    onNovoProcedimentoSalvo(): void {
+        this.refresh$.next();
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Procedimento adicionado',
+            detail: 'O procedimento foi registrado com sucesso.',
+            life: 3000,
+        });
     }
 
     abrirModalEdicao(procedimento: Procedimento): void {

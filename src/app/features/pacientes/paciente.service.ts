@@ -28,8 +28,8 @@ export class PacienteService {
         return this.http.get<PacienteDetalhes>(API_ROUTES.pacientes.buscarPorId(id));
     }
 
-    adicionar(paciente: Omit<PacienteCadastro, 'id'>) {
-        return this.http.post<PacienteCadastro>(API_ROUTES.pacientes.adicionar, paciente);
+    adicionar(paciente: PacienteCadastro) {
+        return this.http.post<{ id: number }>(API_ROUTES.pacientes.adicionar, paciente);
     }
 
     atualizar(id: number, paciente: Partial<Omit<PacienteAtualizar, 'id'>>) {

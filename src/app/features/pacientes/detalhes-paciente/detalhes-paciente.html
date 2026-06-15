@@ -183,7 +183,7 @@
                     </button>
                     <button
                         type="submit"
-                        class="botao-salvar"
+                        class="btn-primary-sm"
                         [disabled]="form.invalid || salvando()"
                     >
                         {{ salvando() ? 'Salvando...' : 'Salvar' }}
@@ -192,6 +192,14 @@
             </form>
         </div>
     </div>
+}
+
+@if (novoProcedimentoModalAberta() && paciente()) {
+    <app-novo-procedimento-modal
+        [pacienteId]="paciente()!.id"
+        (salvo)="onProcedimentoSalvo()"
+        (fechada)="fecharNovoProcedimentoModal()"
+    />
 }
 
 <p-toast />

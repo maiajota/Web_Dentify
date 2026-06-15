@@ -80,13 +80,22 @@
                 </div>
             </div>
 
+            <label class="campo-checkbox">
+                <input
+                    type="checkbox"
+                    [checked]="cadastrarProcedimento()"
+                    (change)="cadastrarProcedimento.set($any($event.target).checked)"
+                />
+                Cadastrar um procedimento para esse paciente
+            </label>
+
             <div class="formulario-acoes">
                 <button type="button" class="botao-cancelar" routerLink="/pacientes">
                     Cancelar
                 </button>
                 <button
                     type="submit"
-                    class="botao-salvar"
+                    class="btn-primary"
                     [disabled]="form.invalid || salvando()"
                 >
                     <svg lucideSave></svg>

@@ -5,7 +5,7 @@
             <h1 class="cabecalho-titulo">Pacientes</h1>
             <p class="cabecalho-subtitulo">{{ totalPacientes() }} pacientes cadastrados.</p>
         </div>
-        <button class="botao-novo-paciente" routerLink="/pacientes/novo">
+        <button class="btn-primary" routerLink="/pacientes/novo">
             <svg lucidePlus aria-hidden="true"></svg>
             Novo paciente
         </button>
@@ -63,6 +63,15 @@
                             >
                                 <svg lucideEye aria-hidden="true"></svg>
                             </button>
+                            <button
+                                class="botao-acao"
+                                pTooltip="Novo procedimento"
+                                tooltipPosition="top"
+                                aria-label="Novo procedimento"
+                                (click)="pacienteSelecionadoId.set(paciente.id); $event.stopPropagation()"
+                            >
+                                <svg lucideClipboardPen aria-hidden="true"></svg>
+                            </button>
                         </td>
                     </tr>
                 } @empty {
@@ -101,3 +110,13 @@
     }
 
 </div>
+
+@if (pacienteSelecionadoId(); as pacienteId) {
+    <app-novo-procedimento-modal
+        [pacienteId]="pacienteId"
+        (salvo)="onNovoProcedimentoSalvo()"
+        (fechada)="pacienteSelecionadoId.set(null)"
+    />
+}
+
+<p-toast />
