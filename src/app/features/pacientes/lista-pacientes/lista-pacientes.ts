@@ -1,16 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, map, switchMap } from 'rxjs';
-import { LucideArrowLeft, LucideArrowRight, LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
+import { LucideArrowLeft, LucideArrowRight, LucideClipboardPen, LucideEye, LucidePlus, LucideSearch } from '@lucide/angular';
 import { InputText } from 'primeng/inputtext';
 import { Tooltip } from 'primeng/tooltip';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { PacienteService } from '../paciente.service';
 import { PacienteRequest, PacienteResumo } from '../paciente.model';
 import { PagedResult } from '../../../core/models/paged-result.model';
 import { CpfPipe } from '../cpf.pipe';
 import { TelefonePipe } from '../telefone.pipe';
+import { NovoProcedimentoModalComponent } from '../../procedimentos/novo-procedimento-modal/novo-procedimento-modal';
 
 @Component({
     selector: 'app-lista-pacientes',
@@ -19,23 +22,31 @@ import { TelefonePipe } from '../telefone.pipe';
         RouterLink,
         LucideArrowLeft,
         LucideArrowRight,
+        LucideClipboardPen,
         LucideEye,
         LucidePlus,
         LucideSearch,
         InputText,
         Tooltip,
+        ToastModule,
         CpfPipe,
         TelefonePipe,
+        NovoProcedimentoModalComponent,
     ],
+    providers: [MessageService],
     templateUrl: './lista-pacientes.html',
     styleUrl: './lista-pacientes.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaPacientesComponent {
     private pacientesService = inject(PacienteService);
+    private messageService = inject(MessageService);
     private roteador = inject(Router);
 
     private filtroParams$ = new BehaviorSubject<PacienteRequest>({ pageNumber: 1, pageSize: 20 });
+    private refresh$ = new BehaviorSubject<void>(undefined);
+
+    pacienteSelecionadoId = signal<number | null>(null);
 
     totalPacientes = toSignal(
         this.pacientesService.buscar({ pageNumber: 1, pageSize: 1 }).pipe(map((r) => r.totalItems)),
@@ -43,7 +54,9 @@ export class ListaPacientesComponent {
     );
 
     pacientes = toSignal(
-        this.filtroParams$.pipe(switchMap((request) => this.pacientesService.buscar(request))),
+        combineLatest([this.filtroParams$, this.refresh$]).pipe(
+            switchMap(([request]) => this.pacientesService.buscar(request)),
+        ),
         {
             initialValue: {
                 data: [],
@@ -82,5 +95,15 @@ export class ListaPacientesComponent {
 
     verPaciente(id: number): void {
         this.roteador.navigate(['/pacientes', id]);
+    }
+
+    onNovoProcedimentoSalvo(): void {
+        this.refresh$.next();
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Procedimento adicionado',
+            detail: 'O procedimento foi registrado com sucesso.',
+            life: 3000,
+        });
     }
 }

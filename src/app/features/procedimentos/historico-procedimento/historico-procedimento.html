@@ -15,7 +15,7 @@
                 <p class="historico-subtitulo">{{ p.nome }} · {{ p.quantidadeProcedimentos }} procedimentos</p>
             }
         </div>
-        <button type="button" class="botao-novo" (click)="abrirModal()">
+        <button type="button" class="btn-primary" (click)="novoModalAberto.set(true)">
             <svg lucidePlus aria-hidden="true"></svg>
             Novo Procedimento
         </button>
@@ -145,7 +145,7 @@
             (click)="$event.stopPropagation()"
         >
             <div class="modal-cabecalho">
-                <h2 id="modal-titulo" class="modal-titulo">{{ procedimentoEmEdicao() ? 'Editar Procedimento' : 'Adicionar Procedimento' }}</h2>
+                <h2 id="modal-titulo" class="modal-titulo">Editar Procedimento</h2>
                 <button
                     type="button"
                     class="modal-fechar"
@@ -199,7 +199,7 @@
                     </button>
                     <button
                         type="submit"
-                        class="botao-salvar"
+                        class="btn-primary-sm"
                         [disabled]="form.invalid || salvando()"
                     >
                         {{ salvando() ? 'Salvando...' : 'Salvar' }}
@@ -253,6 +253,14 @@
             </div>
         </div>
     </div>
+}
+
+@if (novoModalAberto()) {
+    <app-novo-procedimento-modal
+        [pacienteId]="paciente()!.id"
+        (salvo)="onNovoProcedimentoSalvo()"
+        (fechada)="novoModalAberto.set(false)"
+    />
 }
 
 <p-toast />

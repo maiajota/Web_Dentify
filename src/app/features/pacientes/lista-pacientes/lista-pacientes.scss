@@ -31,28 +31,6 @@
     margin: 0;
 }
 
-.botao-novo-paciente {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: $azul-primario;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.30);
-    transition: background 0.15s, box-shadow 0.15s;
-
-    &:hover {
-        background: color.adjust($azul-primario, $lightness: -8%);
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.40);
-    }
-}
 
 .container-busca {
     display: flex;
@@ -152,6 +130,7 @@
 .tabela-celula-centro {
     display: flex;
     justify-content: center;
+    gap: 4px;
 }
 
 .paciente-nome {

@@ -1,0 +1,76 @@
+<div
+    class="modal-overlay"
+    role="presentation"
+    (click)="fechar()"
+>
+    <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="novo-proc-titulo"
+        (click)="$event.stopPropagation()"
+    >
+        <div class="modal-cabecalho">
+            <h2 id="novo-proc-titulo" class="modal-titulo">Adicionar Procedimento</h2>
+            <button
+                type="button"
+                class="modal-fechar"
+                aria-label="Fechar modal"
+                (click)="fechar()"
+            >
+                <svg lucideX aria-hidden="true"></svg>
+            </button>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="salvar()" class="modal-form">
+            <div class="campo">
+                <label class="campo-label" for="novo-proc-data">Data *</label>
+                <p-datePicker
+                    inputId="novo-proc-data"
+                    formControlName="dataProcedimento"
+                    dateFormat="dd/mm/yy"
+                    [showIcon]="true"
+                    appendTo="body"
+                />
+            </div>
+
+            <div class="campo">
+                <label class="campo-label" for="novo-proc-descricao">Descrição *</label>
+                <textarea
+                    pTextarea
+                    id="novo-proc-descricao"
+                    class="campo-textarea"
+                    formControlName="descricao"
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <div class="campo">
+                <label class="campo-label" for="novo-proc-convenio">Convênio</label>
+                <select
+                    id="novo-proc-convenio"
+                    class="campo-select"
+                    formControlName="convenioId"
+                >
+                    <option [ngValue]="null">Nenhum</option>
+                    @for (c of convenios(); track c.id) {
+                        <option [ngValue]="c.id">{{ c.nome }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="modal-acoes">
+                <button type="button" class="botao-cancelar" (click)="fechar()">
+                    Cancelar
+                </button>
+                <button
+                    type="submit"
+                    class="btn-primary-sm"
+                    [disabled]="form.invalid || salvando()"
+                >
+                    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
