@@ -194,4 +194,12 @@
     </div>
 }
 
+@if (novoProcedimentoModalAberta() && paciente()) {
+    <app-novo-procedimento-modal
+        [pacienteId]="paciente()!.id"
+        (salvo)="onProcedimentoSalvo()"
+        (fechada)="fecharNovoProcedimentoModal()"
+    />
+}
+
 <p-toast />

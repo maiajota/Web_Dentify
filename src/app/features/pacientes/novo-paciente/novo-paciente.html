@@ -80,6 +80,15 @@
                 </div>
             </div>
 
+            <label class="campo-checkbox">
+                <input
+                    type="checkbox"
+                    [checked]="cadastrarProcedimento()"
+                    (change)="cadastrarProcedimento.set($any($event.target).checked)"
+                />
+                Cadastrar um procedimento para esse paciente
+            </label>
+
             <div class="formulario-acoes">
                 <button type="button" class="botao-cancelar" routerLink="/pacientes">
                     Cancelar

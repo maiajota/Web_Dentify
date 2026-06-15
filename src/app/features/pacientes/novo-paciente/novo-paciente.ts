@@ -36,6 +36,7 @@ export class NovoPacienteComponent {
     private messageService = inject(MessageService);
 
     salvando = signal(false);
+    cadastrarProcedimento = signal(false);
 
     form = this.fb.group({
         nome: ['', Validators.required],
@@ -60,14 +61,20 @@ export class NovoPacienteComponent {
         };
 
         this.pacientesService.adicionar(novoPaciente).subscribe({
-            next: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Paciente cadastrado',
-                    detail: 'O cadastro foi realizado com sucesso.',
-                    life: 2000,
-                });
-                setTimeout(() => this.roteador.navigate(['/pacientes']), 2000);
+            next: ({ id }) => {
+                if (this.cadastrarProcedimento()) {
+                    this.roteador.navigate(['/pacientes', id], {
+                        queryParams: { novoProcedimento: 'true' },
+                    });
+                } else {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Paciente cadastrado',
+                        detail: 'O cadastro foi realizado com sucesso.',
+                        life: 2000,
+                    });
+                    setTimeout(() => this.roteador.navigate(['/pacientes']), 2000);
+                }
             },
             error: () => this.salvando.set(false),
         });

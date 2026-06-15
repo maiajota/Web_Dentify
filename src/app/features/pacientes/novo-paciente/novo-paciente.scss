@@ -68,6 +68,25 @@
     box-sizing: border-box;
 }
 
+.campo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $cor-texto-escuro;
+    cursor: pointer;
+    user-select: none;
+
+    input[type='checkbox'] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: $azul-primario;
+        flex-shrink: 0;
+    }
+}
+
 .formulario-acoes {
     display: flex;
     justify-content: flex-end;

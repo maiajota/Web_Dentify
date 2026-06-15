@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -20,6 +20,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PacienteService } from '../paciente.service';
 import { ProcedimentoService } from '../../procedimentos/procedimento.service';
+import { NovoProcedimentoModalComponent } from '../../procedimentos/novo-procedimento-modal/novo-procedimento-modal';
 import { PacienteDetalhes } from '../paciente.model';
 import { Procedimento } from '../../procedimentos/procedimento.model';
 import { TelefonePipe } from '../telefone.pipe';
@@ -32,6 +33,7 @@ import { TelefoneMaskDirective } from '../telefone-mask.directive';
         DatePipe,
         ReactiveFormsModule,
         RouterLink,
+        NovoProcedimentoModalComponent,
         LucideCalendar,
         LucideCreditCard,
         LucidePhone,
@@ -57,6 +59,7 @@ export class DetalhesPacienteComponent {
     private pacientesService = inject(PacienteService);
     private procedimentosService = inject(ProcedimentoService);
     private route = inject(ActivatedRoute);
+    private roteador = inject(Router);
     private fb = inject(FormBuilder);
     private messageService = inject(MessageService);
 
@@ -70,13 +73,27 @@ export class DetalhesPacienteComponent {
     );
 
     ultimosProcedimentos = toSignal(
-        this.id$.pipe(switchMap((id) => this.procedimentosService.buscarRecentesPorPaciente(id, 3))),
+        combineLatest([this.id$, this.refresh$]).pipe(
+            switchMap(([id]) => this.procedimentosService.buscarRecentesPorPaciente(id, 3))
+        ),
         { initialValue: [] as Procedimento[] }
     );
 
     modalAberta = signal(false);
+    novoProcedimentoModalAberta = signal(false);
     salvando = signal(false);
     pacienteEmEdicao = signal<PacienteDetalhes | null>(null);
+
+    constructor() {
+        if (this.route.snapshot.queryParamMap.has('novoProcedimento')) {
+            this.novoProcedimentoModalAberta.set(true);
+            this.roteador.navigate([], {
+                relativeTo: this.route,
+                queryParams: {},
+                replaceUrl: true,
+            });
+        }
+    }
 
     form = this.fb.group({
         nome: ['', Validators.required],
@@ -84,6 +101,20 @@ export class DetalhesPacienteComponent {
         dataNascimento: [null as Date | null, Validators.required],
         logradouro: ['', Validators.required],
     });
+
+    onProcedimentoSalvo(): void {
+        this.refresh$.next();
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Procedimento adicionado',
+            detail: 'O procedimento foi registrado com sucesso.',
+            life: 3000,
+        });
+    }
+
+    fecharNovoProcedimentoModal(): void {
+        this.novoProcedimentoModalAberta.set(false);
+    }
 
     abrirModal(p: PacienteDetalhes): void {
         this.pacienteEmEdicao.set(p);
