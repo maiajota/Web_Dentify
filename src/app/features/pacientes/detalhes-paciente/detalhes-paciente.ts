@@ -97,9 +97,9 @@ export class DetalhesPacienteComponent {
 
     form = this.fb.group({
         nome: ['', Validators.required],
-        telefone: ['', Validators.required],
-        dataNascimento: [null as Date | null, Validators.required],
-        logradouro: ['', Validators.required],
+        telefone: [''],
+        dataNascimento: [null as Date | null],
+        logradouro: [''],
     });
 
     onProcedimentoSalvo(): void {
@@ -120,9 +120,9 @@ export class DetalhesPacienteComponent {
         this.pacienteEmEdicao.set(p);
         this.form.patchValue({
             nome: p.nome,
-            telefone: new TelefonePipe().transform(p.telefone),
-            dataNascimento: new Date(p.dataNascimento),
-            logradouro: p.logradouro,
+            telefone: p.telefone ? new TelefonePipe().transform(p.telefone) : null,
+            dataNascimento: p.dataNascimento ? new Date(p.dataNascimento) : null,
+            logradouro: p.logradouro ?? null,
         });
         this.modalAberta.set(true);
     }
@@ -144,9 +144,9 @@ export class DetalhesPacienteComponent {
 
         this.pacientesService.atualizar(paciente.id, {
             nome: nome!,
-            telefone: telefone!.replace(/\D/g, ''),
-            dataNascimento: dataNascimento!,
-            logradouro: logradouro!,
+            telefone: telefone ? telefone.replace(/\D/g, '') : null,
+            dataNascimento: dataNascimento ?? null,
+            logradouro: logradouro || null,
         }).subscribe({
             next: () => {
                 this.messageService.add({

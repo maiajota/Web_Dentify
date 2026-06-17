@@ -25,27 +25,33 @@
                 </div>
                 <span class="card-info-valor">{{ p.cpf | cpf }}</span>
             </div>
-            <div class="card-info" role="listitem">
-                <div class="card-info-titulo">
-                    <svg lucideCalendar class="card-info-icone" aria-hidden="true"></svg>
-                    <span class="card-info-label">Nascimento</span>
+            @if (p.dataNascimento) {
+                <div class="card-info" role="listitem">
+                    <div class="card-info-titulo">
+                        <svg lucideCalendar class="card-info-icone" aria-hidden="true"></svg>
+                        <span class="card-info-label">Nascimento</span>
+                    </div>
+                    <span class="card-info-valor">{{ p.dataNascimento | date:'dd/MM/yyyy' }}</span>
                 </div>
-                <span class="card-info-valor">{{ p.dataNascimento | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="card-info" role="listitem">
-                <div class="card-info-titulo">
-                    <svg lucidePhone class="card-info-icone" aria-hidden="true"></svg>
-                    <span class="card-info-label">Telefone</span>
+            }
+            @if (p.telefone) {
+                <div class="card-info" role="listitem">
+                    <div class="card-info-titulo">
+                        <svg lucidePhone class="card-info-icone" aria-hidden="true"></svg>
+                        <span class="card-info-label">Telefone</span>
+                    </div>
+                    <span class="card-info-valor">{{ p.telefone | telefone }}</span>
                 </div>
-                <span class="card-info-valor">{{ p.telefone | telefone }}</span>
-            </div>
-            <div class="card-info -grande" role="listitem">
-                <div class="card-info-titulo">
-                    <svg lucideMapPin class="card-info-icone" aria-hidden="true"></svg>
-                    <span class="card-info-label">Logradouro</span>
+            }
+            @if (p.logradouro) {
+                <div class="card-info -grande" role="listitem">
+                    <div class="card-info-titulo">
+                        <svg lucideMapPin class="card-info-icone" aria-hidden="true"></svg>
+                        <span class="card-info-label">Logradouro</span>
+                    </div>
+                    <span class="card-info-valor">{{ p.logradouro }}</span>
                 </div>
-                <span class="card-info-valor">{{ p.logradouro }}</span>
-            </div>
+            }
         </div>
 
         <section class="card-procedimentos" aria-label="Últimos procedimentos">
@@ -138,7 +144,7 @@
                         />
                     </div>
                     <div class="campo">
-                        <label class="campo-label" for="telefone">Telefone *</label>
+                        <label class="campo-label" for="telefone">Telefone</label>
                         <input
                             pInputText
                             id="telefone"
@@ -154,7 +160,7 @@
 
                 <div class="formulario-linha">
                     <div class="campo">
-                        <label class="campo-label" for="dataNascimento">Data de nascimento *</label>
+                        <label class="campo-label" for="dataNascimento">Data de nascimento</label>
                         <p-datePicker
                             inputId="dataNascimento"
                             formControlName="dataNascimento"
@@ -164,7 +170,7 @@
                         />
                     </div>
                     <div class="campo">
-                        <label class="campo-label" for="logradouro">Logradouro *</label>
+                        <label class="campo-label" for="logradouro">Logradouro</label>
                         <input
                             pInputText
                             id="logradouro"
