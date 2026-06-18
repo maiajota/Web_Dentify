@@ -1,4 +1,4 @@
 export interface Convenio {
-    id: number;
+    guid: string;
     nome: string;
 }

@@ -8,12 +8,12 @@ import { Procedimento, ProcedimentoAtualizacao, ProcedimentoCadastro, Procedimen
 export class ProcedimentoService {
     private http = inject(HttpClient);
 
-    buscarPorPaciente(pacienteId: number, request?: ProcedimentoRequest) {
+    buscarPorPaciente(pacienteId: string, request?: ProcedimentoRequest) {
         let params = new HttpParams();
         if (request) {
             if (request.descricao) params = params.set('descricao', request.descricao);
 
-            request.convenioIds?.forEach((id) => (params = params.append('convenioIds', id.toString())));
+            request.convenioGuids?.forEach((guid) => (params = params.append('convenioGuids', guid)));
 
             if (request.dataInicio) params = params.set('dataInicio', request.dataInicio);
             if (request.dataFim) params = params.set('dataFim', request.dataFim);
@@ -24,7 +24,7 @@ export class ProcedimentoService {
         return this.http.get<PagedResult<Procedimento>>(API_ROUTES.procedimentos.buscarPorId(pacienteId), { params });
     }
 
-    buscarRecentesPorPaciente(pacienteId: number, quantidade: number) {
+    buscarRecentesPorPaciente(pacienteId: string, quantidade: number) {
         return this.http.get<Procedimento[]>(API_ROUTES.procedimentos.buscarRecentes(pacienteId, quantidade));
     }
 
@@ -32,11 +32,11 @@ export class ProcedimentoService {
         return this.http.post<void>(API_ROUTES.procedimentos.adicionar, procedimento);
     }
 
-    atualizar(id: number, procedimento: ProcedimentoAtualizacao) {
+    atualizar(id: string, procedimento: ProcedimentoAtualizacao) {
         return this.http.patch<void>(API_ROUTES.procedimentos.atualizar(id), procedimento);
     }
 
-    remover(id: number) {
+    remover(id: string) {
         return this.http.delete<void>(API_ROUTES.procedimentos.remover(id));
     }
 }

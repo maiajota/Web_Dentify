@@ -55,7 +55,7 @@ export class HistoricoProcedimentoComponent {
     private messageService = inject(MessageService);
     private route = inject(ActivatedRoute);
 
-    private id$ = this.route.params.pipe(map((p) => +p['id']));
+    private id$ = this.route.params.pipe(map((p) => p['id'] as string));
     private refresh$ = new BehaviorSubject<void>(undefined);
     private filtroParams$ = new BehaviorSubject<ProcedimentoRequest>({ pageNumber: 1, pageSize: 20 });
 
@@ -79,7 +79,7 @@ export class HistoricoProcedimentoComponent {
 
     filtros = new FormGroup({
         descricao: new FormControl('', { nonNullable: true }),
-        convenios: new FormControl<number[]>([], { nonNullable: true }),
+        convenioGuids: new FormControl<string[]>([], { nonNullable: true }),
         periodo: new FormControl<Date[] | null>(null),
     });
 
@@ -89,16 +89,16 @@ export class HistoricoProcedimentoComponent {
             nonNullable: true,
             validators: [Validators.required],
         }),
-        convenioId: new FormControl<number | null>(null),
+        convenioGuid: new FormControl<string | null>(null),
     });
 
     filtrar(): void {
-        const { descricao, convenios, periodo } = this.filtros.getRawValue();
+        const { descricao, convenioGuids, periodo } = this.filtros.getRawValue();
         this.filtroParams$.next({
             pageNumber: 1,
             pageSize: 20,
             descricao: descricao || undefined,
-            convenioIds: convenios,
+            convenioGuids,
             dataInicio: periodo?.[0]?.toISOString().split('T')[0],
             dataFim: periodo?.[1]?.toISOString().split('T')[0],
         });
@@ -119,7 +119,7 @@ export class HistoricoProcedimentoComponent {
     }
 
     limparFiltros(): void {
-        this.filtros.reset({ descricao: '', convenios: [], periodo: null });
+        this.filtros.reset({ descricao: '', convenioGuids: [], periodo: null });
         this.filtroParams$.next({ pageNumber: 1, pageSize: 20 });
     }
 
@@ -138,7 +138,7 @@ export class HistoricoProcedimentoComponent {
         this.form.reset({
             dataProcedimento: new Date(`${procedimento.dataProcedimento}T00:00:00`),
             descricao: procedimento.descricao,
-            convenioId: procedimento.convenioId ?? null,
+            convenioGuid: procedimento.convenioGuid ?? null,
         });
         this.modalAberta.set(true);
     }
@@ -161,7 +161,7 @@ export class HistoricoProcedimentoComponent {
         if (!procedimento || this.removendo()) return;
 
         this.removendo.set(true);
-        this.procedimentoService.remover(procedimento.id).subscribe({
+        this.procedimentoService.remover(procedimento.guid).subscribe({
             next: () => {
                 this.removendo.set(false);
                 this.cancelarRemocao();
@@ -181,26 +181,26 @@ export class HistoricoProcedimentoComponent {
         if (this.form.invalid || this.salvando()) return;
 
         const emEdicao = this.procedimentoEmEdicao();
-        const pacienteId = this.paciente()?.id;
+        const pacienteGuid = this.paciente()?.guid;
 
-        const { dataProcedimento, descricao, convenioId } = this.form.getRawValue();
+        const { dataProcedimento, descricao, convenioGuid } = this.form.getRawValue();
 
         this.salvando.set(true);
 
         let request$;
 
         if (emEdicao) {
-            request$ = this.procedimentoService.atualizar(emEdicao.id, {
+            request$ = this.procedimentoService.atualizar(emEdicao.guid, {
                 dataProcedimento: dataProcedimento!,
                 descricao,
-                convenioId,
+                convenioGuid,
             });
         } else {
             request$ = this.procedimentoService.adicionar({
-                pacienteId: pacienteId!,
+                pacienteGuid: pacienteGuid!,
                 dataProcedimento: dataProcedimento!,
                 descricao,
-                convenioId,
+                convenioGuid,
             });
         }
 

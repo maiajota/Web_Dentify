@@ -1,27 +1,27 @@
 export interface Procedimento {
-    id: number;
+    guid: string;
     descricao: string;
     convenioNome: string;
-    convenioId: number
+    convenioGuid: string | null;
     dataProcedimento: Date;
 }
 
 export interface ProcedimentoCadastro {
     dataProcedimento: Date;
     descricao: string;
-    convenioId: number | null;
-    pacienteId: number;
+    convenioGuid: string | null;
+    pacienteGuid: string;
 }
 
 export interface ProcedimentoAtualizacao {
     dataProcedimento: Date;
     descricao: string;
-    convenioId: number | null;
+    convenioGuid: string | null;
 }
 
 export interface ProcedimentoRequest {
     descricao?: string;
-    convenioIds?: number[];
+    convenioGuids?: string[];
     dataInicio?: string;
     dataFim?: string;
     pageNumber: number;

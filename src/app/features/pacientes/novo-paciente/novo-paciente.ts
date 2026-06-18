@@ -61,9 +61,9 @@ export class NovoPacienteComponent {
         };
 
         this.pacientesService.adicionar(novoPaciente).subscribe({
-            next: ({ id }) => {
+            next: ({ guid }) => {
                 if (this.cadastrarProcedimento()) {
-                    this.roteador.navigate(['/pacientes', id], {
+                    this.roteador.navigate(['/pacientes', guid], {
                         queryParams: { novoProcedimento: 'true' },
                     });
                 } else {

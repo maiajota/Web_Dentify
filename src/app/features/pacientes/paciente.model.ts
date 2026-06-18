@@ -1,5 +1,5 @@
 export interface PacienteResumo {
-  id: number;
+  guid: string;
   nome: string;
   cpf: string;
   telefone: string;
@@ -7,7 +7,7 @@ export interface PacienteResumo {
 }
 
 export interface PacienteDetalhes {
-    id: number;
+    guid: string;
     nome: string;
     cpf: string;
     telefone?: string | null;
@@ -25,7 +25,7 @@ export interface PacienteCadastro {
 }
 
 export interface PacienteAtualizar {
-    id: number;
+    guid: string;
     nome: string;
     telefone?: string | null;
     dataNascimento?: Date | null;

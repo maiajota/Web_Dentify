@@ -46,7 +46,7 @@ export class ListaPacientesComponent {
     private filtroParams$ = new BehaviorSubject<PacienteRequest>({ pageNumber: 1, pageSize: 20 });
     private refresh$ = new BehaviorSubject<void>(undefined);
 
-    pacienteSelecionadoId = signal<number | null>(null);
+    pacienteSelecionadoGuid = signal<string | null>(null);
 
     totalPacientes = toSignal(
         this.pacientesService.buscar({ pageNumber: 1, pageSize: 1 }).pipe(map((r) => r.totalItems)),
@@ -93,8 +93,8 @@ export class ListaPacientesComponent {
         this.filtroParams$.next({ ...atual, pageNumber: atual.pageNumber + 1 });
     }
 
-    verPaciente(id: number): void {
-        this.roteador.navigate(['/pacientes', id]);
+    verPaciente(guid: string): void {
+        this.roteador.navigate(['/pacientes', guid]);
     }
 
     onNovoProcedimentoSalvo(): void {

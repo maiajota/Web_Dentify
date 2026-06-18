@@ -50,11 +50,11 @@
                 <select
                     id="novo-proc-convenio"
                     class="campo-select"
-                    formControlName="convenioId"
+                    formControlName="convenioGuid"
                 >
                     <option [ngValue]="null">Nenhum</option>
-                    @for (c of convenios(); track c.id) {
-                        <option [ngValue]="c.id">{{ c.nome }}</option>
+                    @for (c of convenios(); track c.guid) {
+                        <option [ngValue]="c.guid">{{ c.nome }}</option>
                     }
                 </select>
             </div>

@@ -64,7 +64,7 @@ export class DetalhesPacienteComponent {
     private messageService = inject(MessageService);
 
     private refresh$ = new BehaviorSubject<void>(undefined);
-    private id$ = this.route.params.pipe(map((p) => +p['id']));
+    private id$ = this.route.params.pipe(map((p) => p['id'] as string));
 
     paciente = toSignal(
         combineLatest([this.id$, this.refresh$]).pipe(
@@ -127,6 +127,7 @@ export class DetalhesPacienteComponent {
         this.modalAberta.set(true);
     }
 
+
     fecharModal(): void {
         this.modalAberta.set(false);
         this.pacienteEmEdicao.set(null);
@@ -142,7 +143,7 @@ export class DetalhesPacienteComponent {
         this.salvando.set(true);
         const { nome, telefone, dataNascimento, logradouro } = this.form.getRawValue();
 
-        this.pacientesService.atualizar(paciente.id, {
+        this.pacientesService.atualizar(paciente.guid, {
             nome: nome!,
             telefone: telefone ? telefone.replace(/\D/g, '') : null,
             dataNascimento: dataNascimento ?? null,

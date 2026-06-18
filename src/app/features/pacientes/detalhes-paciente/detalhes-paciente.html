@@ -64,7 +64,7 @@
                 </div>
                 <a
                     class="botao-historico"
-                    [routerLink]="['/pacientes', paciente()?.id, 'procedimentos']"
+                    [routerLink]="['/pacientes', paciente()?.guid, 'procedimentos']"
                     aria-label="Ver histórico completo de procedimentos"
                 >
                     <svg lucideClipboardClock aria-hidden="true"></svg>
@@ -73,7 +73,7 @@
             </div>
 
             <ul class="lista-procedimentos">
-                @for (proc of ultimosProcedimentos(); track proc.id) {
+                @for (proc of ultimosProcedimentos(); track proc.guid) {
                     <li class="item-procedimento">
                         <span class="procedimento-data">{{ proc.dataProcedimento | date:'dd/MM/yyyy' }}</span>
                         <div class="procedimento-info">
@@ -202,7 +202,7 @@
 
 @if (novoProcedimentoModalAberta() && paciente()) {
     <app-novo-procedimento-modal
-        [pacienteId]="paciente()!.id"
+        [pacienteGuid]="paciente()!.guid"
         (salvo)="onProcedimentoSalvo()"
         (fechada)="fecharNovoProcedimentoModal()"
     />

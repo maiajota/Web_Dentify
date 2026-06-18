@@ -12,7 +12,7 @@ import { PacienteDetalhes } from '../../pacientes/paciente.model';
 import { Convenio } from '../../convenios/convenio.model';
 
 const PACIENTE_MOCK: PacienteDetalhes = {
-    id: 1,
+    guid: '018e6c8a-0001-7b4a-9c5a-000000000001',
     nome: 'João Victor',
     cpf: '12345678900',
     telefone: '11911111111',
@@ -23,24 +23,24 @@ const PACIENTE_MOCK: PacienteDetalhes = {
 
 const PROCEDIMENTOS_MOCK: Procedimento[] = [
     {
-        id: 1,
+        guid: '018e6c8a-0001-7b4a-9c5a-000000000002',
         descricao: 'Limpeza dental',
         convenioNome: 'Unimed',
-        convenioId: 1,
+        convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000010',
         dataProcedimento: '2024-01-10' as unknown as Date,
     },
     {
-        id: 2,
+        guid: '018e6c8a-0001-7b4a-9c5a-000000000003',
         descricao: 'Extração',
         convenioNome: 'Amil',
-        convenioId: 2,
+        convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000011',
         dataProcedimento: '2024-02-15' as unknown as Date,
     },
 ];
 
 const CONVENIOS_MOCK: Convenio[] = [
-    { id: 1, nome: 'Unimed' },
-    { id: 2, nome: 'Amil' },
+    { guid: '018e6c8a-0001-7b4a-9c5a-000000000010', nome: 'Unimed' },
+    { guid: '018e6c8a-0001-7b4a-9c5a-000000000011', nome: 'Amil' },
 ];
 
 const PAGED_RESULT_MOCK: PagedResult<Procedimento> = {
@@ -80,7 +80,7 @@ async function criarFixture(overrides?: {
     await TestBed.configureTestingModule({
         imports: [HistoricoProcedimentoComponent],
         providers: [
-            { provide: ActivatedRoute, useValue: { params: of({ id: '1' }) } },
+            { provide: ActivatedRoute, useValue: { params: of({ id: '018e6c8a-0001-7b4a-9c5a-000000000001' }) } },
             { provide: PacienteService, useValue: pacienteService },
             { provide: ProcedimentoService, useValue: procedimentoService },
             { provide: ConvenioService, useValue: convenioService },
@@ -147,7 +147,7 @@ describe('HistoricoProcedimentoComponent', () => {
 
         it('abrirModal deve abrir a modal, resetar o form e limpar o procedimento em edição', () => {
             component.procedimentoEmEdicao.set(PROCEDIMENTOS_MOCK[0]);
-            component.form.patchValue({ descricao: 'valor anterior', convenioId: 1 });
+            component.form.patchValue({ descricao: 'valor anterior', convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000010' });
             component.abrirModal();
             fixture.detectChanges();
 
@@ -155,7 +155,7 @@ describe('HistoricoProcedimentoComponent', () => {
             expect(component.procedimentoEmEdicao()).toBeNull();
             expect(el.querySelector('.modal')).not.toBeNull();
             expect(component.form.get('descricao')?.value).toBe('');
-            expect(component.form.get('convenioId')?.value).toBeNull();
+            expect(component.form.get('convenioGuid')?.value).toBeNull();
         });
 
         it('deve exibir o título "Adicionar Procedimento" ao abrir modal de criação', () => {
@@ -192,7 +192,7 @@ describe('HistoricoProcedimentoComponent', () => {
 
         it('deve preencher o form com os dados do procedimento', () => {
             expect(component.form.get('descricao')?.value).toBe(PROC.descricao);
-            expect(component.form.get('convenioId')?.value).toBe(PROC.convenioId);
+            expect(component.form.get('convenioGuid')?.value).toBe(PROC.convenioGuid);
         });
 
         it('deve preencher a data como horário local sem deslocar o dia', () => {
@@ -213,9 +213,9 @@ describe('HistoricoProcedimentoComponent', () => {
 
         it('deve chamar atualizar (e não adicionar) ao salvar', () => {
             component.salvar();
-            expect(procedimentoService.atualizar).toHaveBeenCalledWith(PROC.id, expect.objectContaining({
+            expect(procedimentoService.atualizar).toHaveBeenCalledWith(PROC.guid, expect.objectContaining({
                 descricao: PROC.descricao,
-                convenioId: PROC.convenioId,
+                convenioGuid: PROC.convenioGuid,
             }));
             expect(procedimentoService.adicionar).not.toHaveBeenCalled();
         });
@@ -243,7 +243,7 @@ describe('HistoricoProcedimentoComponent', () => {
 
         beforeEach(() => {
             component.abrirModal();
-            component.form.patchValue({ dataProcedimento: DATA, descricao: 'Consulta', convenioId: 1 });
+            component.form.patchValue({ dataProcedimento: DATA, descricao: 'Consulta', convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000010' });
         });
 
         it('não deve chamar o serviço se o form estiver inválido', () => {
@@ -263,8 +263,8 @@ describe('HistoricoProcedimentoComponent', () => {
             expect(procedimentoService.adicionar).toHaveBeenCalledWith({
                 dataProcedimento: DATA,
                 descricao: 'Consulta',
-                convenioId: 1,
-                pacienteId: 1,
+                convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000010',
+                pacienteGuid: PACIENTE_MOCK.guid,
             });
         });
 
@@ -321,10 +321,10 @@ describe('HistoricoProcedimentoComponent', () => {
             expect(procedimentoService.remover).not.toHaveBeenCalled();
         });
 
-        it('deve chamar remover do service com o id correto', () => {
+        it('deve chamar remover do service com o guid correto', () => {
             component.confirmarRemocao(PROC);
             component.remover();
-            expect(procedimentoService.remover).toHaveBeenCalledWith(PROC.id);
+            expect(procedimentoService.remover).toHaveBeenCalledWith(PROC.guid);
         });
 
         it('deve limpar procedimentoParaRemover e recarregar os procedimentos após remover com sucesso', async () => {
@@ -357,13 +357,14 @@ describe('HistoricoProcedimentoComponent', () => {
             expect(request.descricao).toBe('Limpeza');
         });
 
-        it('filtrar com convênios deve passar os ids como array de números', async () => {
-            component.filtros.patchValue({ convenios: [1, 2] });
+        it('filtrar com convênios deve passar os guids como array de strings', async () => {
+            const guids = [CONVENIOS_MOCK[0].guid, CONVENIOS_MOCK[1].guid];
+            component.filtros.patchValue({ convenioGuids: guids });
             component.filtrar();
             await fixture.whenStable();
 
             const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
-            expect(request.convenioIds).toEqual([1, 2]);
+            expect(request.convenioGuids).toEqual(guids);
         });
 
         it('filtrar com período deve passar as datas formatadas como YYYY-MM-DD', async () => {
@@ -398,9 +399,9 @@ describe('HistoricoProcedimentoComponent', () => {
         });
 
         it('limparFiltros deve resetar o form para os valores padrão', () => {
-            component.filtros.patchValue({ descricao: 'teste', convenios: [1] });
+            component.filtros.patchValue({ descricao: 'teste', convenioGuids: [CONVENIOS_MOCK[0].guid] });
             component.limparFiltros();
-            expect(component.filtros.getRawValue()).toEqual({ descricao: '', convenios: [], periodo: null });
+            expect(component.filtros.getRawValue()).toEqual({ descricao: '', convenioGuids: [], periodo: null });
         });
 
         it('limparFiltros deve recarregar sem campos de filtro', async () => {
@@ -411,7 +412,7 @@ describe('HistoricoProcedimentoComponent', () => {
 
             const request = procedimentoService.buscarPorPaciente.mock.calls.at(-1)?.[1] as ProcedimentoRequest;
             expect(request.descricao).toBeUndefined();
-            expect(request.convenioIds).toBeUndefined();
+            expect(request.convenioGuids).toBeUndefined();
             expect(request.dataInicio).toBeUndefined();
             expect(request.dataFim).toBeUndefined();
         });

@@ -1,7 +1,7 @@
 <div class="pagina-historico">
     <a
         class="botao-voltar"
-        [routerLink]="['/pacientes', paciente()?.id]"
+        [routerLink]="['/pacientes', paciente()?.guid]"
         aria-label="Voltar para detalhes do paciente"
     >
         <svg lucideArrowLeft aria-hidden="true"></svg>
@@ -31,10 +31,10 @@
             aria-label="Filtrar por descrição"
         />
         <p-multiSelect
-            formControlName="convenios"
+            formControlName="convenioGuids"
             [options]="convenios()"
             optionLabel="nome"
-            optionValue="id"
+            optionValue="guid"
             placeholder="Convênios"
             selectedItemsLabel="{0} selecionados"
             [maxSelectedLabels]="1"
@@ -70,7 +70,7 @@
 
     <section class="card-procedimentos" aria-label="Histórico de procedimentos">
         <ul class="lista-procedimentos" role="list">
-            @for (proc of procedimentos().data; track proc.id) {
+            @for (proc of procedimentos().data; track proc.guid) {
                 <li class="item-procedimento">
                     <span class="procedimento-data">{{ proc.dataProcedimento | date:'dd/MM/yyyy' }}</span>
                     <div class="procedimento-info">
@@ -184,11 +184,11 @@
                     <select
                         id="convenio"
                         class="campo-select"
-                        formControlName="convenioId"
+                        formControlName="convenioGuid"
                     >
                         <option [ngValue]="null">Nenhum</option>
-                        @for (c of convenios(); track c.id) {
-                            <option [ngValue]="c.id">{{ c.nome }}</option>
+                        @for (c of convenios(); track c.guid) {
+                            <option [ngValue]="c.guid">{{ c.nome }}</option>
                         }
                     </select>
                 </div>
@@ -257,7 +257,7 @@
 
 @if (novoModalAberto()) {
     <app-novo-procedimento-modal
-        [pacienteId]="paciente()!.id"
+        [pacienteGuid]="paciente()!.guid"
         (salvo)="onNovoProcedimentoSalvo()"
         (fechada)="novoModalAberto.set(false)"
     />
