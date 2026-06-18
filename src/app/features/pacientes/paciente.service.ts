@@ -24,19 +24,19 @@ export class PacienteService {
         return this.http.get<PagedResult<PacienteResumo>>(API_ROUTES.pacientes.buscar, { params });
     }
 
-    buscarPorId(id: number) {
+    buscarPorId(id: string) {
         return this.http.get<PacienteDetalhes>(API_ROUTES.pacientes.buscarPorId(id));
     }
 
     adicionar(paciente: PacienteCadastro) {
-        return this.http.post<{ id: number }>(API_ROUTES.pacientes.adicionar, paciente);
+        return this.http.post<{ guid: string }>(API_ROUTES.pacientes.adicionar, paciente);
     }
 
-    atualizar(id: number, paciente: Partial<Omit<PacienteAtualizar, 'id'>>) {
-        return this.http.patch<PacienteAtualizar>(API_ROUTES.pacientes.atualizar(id), paciente);
+    atualizar(guid: string, paciente: Partial<Omit<PacienteAtualizar, 'guid'>>) {
+        return this.http.patch<PacienteAtualizar>(API_ROUTES.pacientes.atualizar(guid), paciente);
     }
 
-    remover(id: number) {
+    remover(id: string) {
         return this.http.delete<void>(API_ROUTES.pacientes.remover(id));
     }
 

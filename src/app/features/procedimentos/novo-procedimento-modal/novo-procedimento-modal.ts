@@ -25,7 +25,7 @@ export class NovoProcedimentoModalComponent {
     private procedimentoService = inject(ProcedimentoService);
     private convenioService = inject(ConvenioService);
 
-    readonly pacienteId = input.required<number>();
+    readonly pacienteGuid = input.required<string>();
     readonly salvo = output<void>();
     readonly fechada = output<void>();
 
@@ -38,7 +38,7 @@ export class NovoProcedimentoModalComponent {
             nonNullable: true,
             validators: [Validators.required],
         }),
-        convenioId: new FormControl<number | null>(null),
+        convenioGuid: new FormControl<string | null>(null),
     });
 
     fechar(): void {
@@ -48,14 +48,14 @@ export class NovoProcedimentoModalComponent {
     salvar(): void {
         if (this.form.invalid || this.salvando()) return;
 
-        const { dataProcedimento, descricao, convenioId } = this.form.getRawValue();
+        const { dataProcedimento, descricao, convenioGuid } = this.form.getRawValue();
 
         this.salvando.set(true);
         this.procedimentoService.adicionar({
-            pacienteId: this.pacienteId(),
+            pacienteGuid: this.pacienteGuid(),
             dataProcedimento: dataProcedimento!,
             descricao,
-            convenioId,
+            convenioGuid,
         }).subscribe({
             next: () => {
                 this.salvando.set(false);

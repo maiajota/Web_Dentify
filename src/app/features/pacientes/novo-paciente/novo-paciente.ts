@@ -41,9 +41,9 @@ export class NovoPacienteComponent {
     form = this.fb.group({
         nome: ['', Validators.required],
         cpf: ['', Validators.required],
-        telefone: ['', Validators.required],
-        dataNascimento: [null as Date | null, Validators.required],
-        logradouro: ['', Validators.required],
+        telefone: [''],
+        dataNascimento: [null as Date | null],
+        logradouro: [''],
     });
 
     salvar(): void {
@@ -55,15 +55,15 @@ export class NovoPacienteComponent {
         const novoPaciente: PacienteCadastro = {
             nome: nome!,
             cpf: cpf!.replace(/\D/g, ''),
-            telefone: telefone!.replace(/\D/g, ''),
-            dataNascimento: dataNascimento!,
-            logradouro: logradouro!,
+            telefone: telefone ? telefone.replace(/\D/g, '') : null,
+            dataNascimento: dataNascimento ?? null,
+            logradouro: logradouro || null,
         };
 
         this.pacientesService.adicionar(novoPaciente).subscribe({
-            next: ({ id }) => {
+            next: ({ guid }) => {
                 if (this.cadastrarProcedimento()) {
-                    this.roteador.navigate(['/pacientes', id], {
+                    this.roteador.navigate(['/pacientes', guid], {
                         queryParams: { novoProcedimento: 'true' },
                     });
                 } else {

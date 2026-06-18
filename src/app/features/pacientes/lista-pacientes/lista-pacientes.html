@@ -45,7 +45,7 @@
             </tr>
             </thead>
             <tbody>
-                @for (paciente of pacientes().data; track paciente.id) {
+                @for (paciente of pacientes().data; track paciente.guid) {
                     <tr class="tabela-linha">
                         <td class="tabela-celula paciente-nome">{{ paciente.nome }}</td>
                         <td class="tabela-celula celula-secundaria">{{ paciente.cpf | cpf }}</td>
@@ -59,7 +59,7 @@
                                 pTooltip="Ver detalhes"
                                 tooltipPosition="top"
                                 aria-label="Ver detalhes do paciente"
-                                (click)="verPaciente(paciente.id); $event.stopPropagation()"
+                                (click)="verPaciente(paciente.guid); $event.stopPropagation()"
                             >
                                 <svg lucideEye aria-hidden="true"></svg>
                             </button>
@@ -68,7 +68,7 @@
                                 pTooltip="Novo procedimento"
                                 tooltipPosition="top"
                                 aria-label="Novo procedimento"
-                                (click)="pacienteSelecionadoId.set(paciente.id); $event.stopPropagation()"
+                                (click)="pacienteSelecionadoGuid.set(paciente.guid); $event.stopPropagation()"
                             >
                                 <svg lucideClipboardPen aria-hidden="true"></svg>
                             </button>
@@ -111,11 +111,11 @@
 
 </div>
 
-@if (pacienteSelecionadoId(); as pacienteId) {
+@if (pacienteSelecionadoGuid(); as pacienteGuid) {
     <app-novo-procedimento-modal
-        [pacienteId]="pacienteId"
+        [pacienteGuid]="pacienteGuid"
         (salvo)="onNovoProcedimentoSalvo()"
-        (fechada)="pacienteSelecionadoId.set(null)"
+        (fechada)="pacienteSelecionadoGuid.set(null)"
     />
 }
 
