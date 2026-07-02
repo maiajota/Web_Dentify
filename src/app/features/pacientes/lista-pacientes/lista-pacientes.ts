@@ -7,7 +7,6 @@ import { LucideArrowLeft, LucideArrowRight, LucideClipboardPen, LucideEye, Lucid
 import { InputText } from 'primeng/inputtext';
 import { Tooltip } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { PacienteService } from '../paciente.service';
 import { PacienteRequest, PacienteResumo } from '../paciente.model';
 import { PagedResult } from '../../../core/models/paged-result.model';
@@ -28,12 +27,10 @@ import { NovoProcedimentoModalComponent } from '../../procedimentos/novo-procedi
         LucideSearch,
         InputText,
         Tooltip,
-        ToastModule,
         CpfPipe,
         TelefonePipe,
         NovoProcedimentoModalComponent,
     ],
-    providers: [MessageService],
     templateUrl: './lista-pacientes.html',
     styleUrl: './lista-pacientes.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

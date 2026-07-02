@@ -27,12 +27,7 @@ async function criarFixture(adicionarRetorno = of({})) {
             { provide: ConvenioService, useValue: { buscar: () => of([]) } },
             MessageService,
         ],
-    })
-        .overrideComponent(NovoPacienteComponent, {
-            // remove component-level MessageService so Toast uses the module-level one
-            set: { providers: [] },
-        })
-        .compileComponents();
+    }).compileComponents();
 
     const fixture = TestBed.createComponent(NovoPacienteComponent);
     const component = fixture.componentInstance;
@@ -159,14 +154,11 @@ describe('NovoPacienteComponent', () => {
             );
         });
 
-        it('deve navegar para /pacientes após 2 segundos do sucesso', () => {
-            vi.useFakeTimers();
+        it('deve navegar para /pacientes imediatamente após o sucesso', () => {
             const navegar = vi.spyOn(router, 'navigate');
             component.form.setValue(DADOS_VALIDOS);
             component.salvar();
-            vi.advanceTimersByTime(2000);
             expect(navegar).toHaveBeenCalledWith(['/pacientes']);
-            vi.useRealTimers();
         });
 
         it('deve redefinir salvando para false em caso de erro', () => {

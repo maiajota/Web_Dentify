@@ -9,7 +9,6 @@ import { PacienteCadastro } from '../paciente.model';
 import { CpfMaskDirective } from '../cpf-mask.directive';
 import { TelefoneMaskDirective } from '../telefone-mask.directive';
 import { ConvenioFormGroup, ConveniosPacienteComponent } from '../convenios-paciente/convenios-paciente';
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -23,10 +22,8 @@ import { MessageService } from 'primeng/api';
         CpfMaskDirective,
         TelefoneMaskDirective,
         ConveniosPacienteComponent,
-        ToastModule,
         DatePickerModule,
     ],
-    providers: [MessageService],
     templateUrl: './novo-paciente.html',
     styleUrl: './novo-paciente.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,9 +81,9 @@ export class NovoPacienteComponent {
                         severity: 'success',
                         summary: 'Paciente cadastrado',
                         detail: 'O cadastro foi realizado com sucesso.',
-                        life: 2000,
+                        life: 3000,
                     });
-                    setTimeout(() => this.roteador.navigate(['/pacientes']), 2000);
+                    this.roteador.navigate(['/pacientes']);
                 }
             },
             error: () => this.salvando.set(false),

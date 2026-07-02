@@ -18,7 +18,6 @@ import {
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
 import { InputText } from 'primeng/inputtext';
 import { Tooltip } from 'primeng/tooltip';
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PacienteService } from '../paciente.service';
 import { ProcedimentoService } from '../../procedimentos/procedimento.service';
@@ -51,13 +50,11 @@ import { ConveniosModalComponent } from '../convenios-modal/convenios-modal';
         DatePickerModule,
         InputText,
         Tooltip,
-        ToastModule,
         TelefonePipe,
         CpfPipe,
         TelefoneMaskDirective,
         ConveniosModalComponent,
     ],
-    providers: [MessageService],
     templateUrl: './detalhes-paciente.html',
     styleUrl: './detalhes-paciente.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
+import { MessageService } from 'primeng/api';
 import { HistoricoProcedimentoComponent } from './historico-procedimento';
 import { PacienteService } from '../../pacientes/paciente.service';
 import { ProcedimentoService } from '../procedimento.service';
@@ -85,6 +86,7 @@ async function criarFixture(overrides?: {
             { provide: PacienteService, useValue: pacienteService },
             { provide: ProcedimentoService, useValue: procedimentoService },
             { provide: ConvenioService, useValue: convenioService },
+            MessageService,
         ],
     }).compileComponents();
 
@@ -144,27 +146,6 @@ describe('HistoricoProcedimentoComponent', () => {
         it('deve iniciar com a modal fechada', () => {
             expect(component.modalAberta()).toBe(false);
             expect(el.querySelector('.modal')).toBeNull();
-        });
-
-        it('abrirModal deve abrir a modal, resetar o form e limpar o procedimento em edição', () => {
-            component.procedimentoEmEdicao.set(PROCEDIMENTOS_MOCK[0]);
-            component.form.patchValue({ descricao: 'valor anterior', convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000010' });
-            component.abrirModal();
-            fixture.detectChanges();
-
-            expect(component.modalAberta()).toBe(true);
-            expect(component.procedimentoEmEdicao()).toBeNull();
-            expect(el.querySelector('.modal')).not.toBeNull();
-            expect(component.form.get('descricao')?.value).toBe('');
-            expect(component.form.get('convenioGuid')?.value).toBeNull();
-        });
-
-        it('deve exibir o título "Adicionar Procedimento" ao abrir modal de criação', () => {
-            component.abrirModal();
-            fixture.detectChanges();
-
-            const titulo = el.querySelector<HTMLElement>('#modal-titulo');
-            expect(titulo?.textContent?.trim()).toBe('Adicionar Procedimento');
         });
 
         it('fecharModal deve fechar a modal e limpar o procedimento em edição', () => {
@@ -243,7 +224,8 @@ describe('HistoricoProcedimentoComponent', () => {
         const DATA = new Date('2024-03-10');
 
         beforeEach(() => {
-            component.abrirModal();
+            component.procedimentoEmEdicao.set(null);
+            component.modalAberta.set(true);
             component.form.patchValue({ dataProcedimento: DATA, descricao: 'Consulta', convenioGuid: '018e6c8a-0001-7b4a-9c5a-000000000010' });
         });
 

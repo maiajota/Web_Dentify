@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { AuthService } from '../auth.service';
 import { CpfMaskDirective } from '../../pacientes/cpf-mask.directive';
 import { CreateUsuarioRequest } from '../auth.model';
@@ -16,6 +17,7 @@ export class CadastroComponent {
     private authService = inject(AuthService);
     private roteador = inject(Router);
     private fb = inject(FormBuilder);
+    private messageService = inject(MessageService);
 
     form = this.fb.group({
         nome: ['', Validators.required],
@@ -27,7 +29,6 @@ export class CadastroComponent {
 
     passo = signal<1 | 2>(1);
     carregando = signal(false);
-    toast = signal<{ tipo: 'sucesso' | 'erro'; texto: string } | null>(null);
 
     get nomeCtrl() { return this.form.get('nome')!; }
     get emailCtrl() { return this.form.get('email')!; }
@@ -54,7 +55,7 @@ export class CadastroComponent {
         const { senha, confirmarSenha, nome, email, cpf } = this.form.getRawValue();
 
         if (senha !== confirmarSenha) {
-            this.mostrarToast('erro', 'As senhas não coincidem.');
+            this.mostrarToast('error', 'As senhas não coincidem.');
             return;
         }
 
@@ -73,20 +74,24 @@ export class CadastroComponent {
                     next: () => this.roteador.navigate(['/']),
                     error: () => {
                         this.carregando.set(false);
-                        this.mostrarToast('sucesso', 'Conta criada! Faça login para continuar.');
-                        setTimeout(() => this.roteador.navigate(['/login']), 2500);
+                        this.mostrarToast('success', 'Conta criada! Faça login para continuar.');
+                        this.roteador.navigate(['/login']);
                     },
                 });
             },
             error: () => {
-                this.mostrarToast('erro', 'Erro ao criar conta. Tente novamente.');
+                this.mostrarToast('error', 'Erro ao criar conta. Tente novamente.');
                 this.carregando.set(false);
             },
         });
     }
 
-    private mostrarToast(tipo: 'sucesso' | 'erro', texto: string): void {
-        this.toast.set({ tipo, texto });
-        setTimeout(() => this.toast.set(null), 4000);
+    private mostrarToast(severity: 'success' | 'error', detail: string): void {
+        this.messageService.add({
+            severity,
+            summary: severity === 'success' ? 'Sucesso' : 'Erro',
+            detail,
+            life: 4000,
+        });
     }
 }
