@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LucideCalendar,
     LucideClipboardClock,
@@ -11,6 +11,8 @@ import {
     LucideMapPin,
     LucidePen,
     LucidePhone,
+    LucideSettings2,
+    LucideShield,
     LucideX,
 } from '@lucide/angular';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
@@ -26,6 +28,8 @@ import { Procedimento } from '../../procedimentos/procedimento.model';
 import { TelefonePipe } from '../telefone.pipe';
 import { CpfPipe } from '../cpf.pipe';
 import { TelefoneMaskDirective } from '../telefone-mask.directive';
+import { ConvenioFormGroup, criarConvenioFormGroup } from '../convenios-paciente/convenios-paciente';
+import { ConveniosModalComponent } from '../convenios-modal/convenios-modal';
 
 @Component({
     selector: 'app-detalhes-paciente',
@@ -40,6 +44,8 @@ import { TelefoneMaskDirective } from '../telefone-mask.directive';
         LucideMapPin,
         LucideClipboardClock,
         LucidePen,
+        LucideSettings2,
+        LucideShield,
         LucideX,
         DatePicker,
         DatePickerModule,
@@ -49,6 +55,7 @@ import { TelefoneMaskDirective } from '../telefone-mask.directive';
         TelefonePipe,
         CpfPipe,
         TelefoneMaskDirective,
+        ConveniosModalComponent,
     ],
     providers: [MessageService],
     templateUrl: './detalhes-paciente.html',
@@ -102,6 +109,9 @@ export class DetalhesPacienteComponent {
         logradouro: [''],
     });
 
+    conveniosModalAberta = signal(false);
+    conveniosArray = new FormArray<ConvenioFormGroup>([]);
+
     onProcedimentoSalvo(): void {
         this.refresh$.next();
         this.messageService.add({
@@ -132,6 +142,29 @@ export class DetalhesPacienteComponent {
         this.modalAberta.set(false);
         this.pacienteEmEdicao.set(null);
         this.form.reset();
+    }
+
+    abrirConveniosModal(p: PacienteDetalhes): void {
+        this.conveniosArray.clear();
+        for (const convenio of p.convenios) {
+            this.conveniosArray.push(criarConvenioFormGroup(this.fb, convenio));
+        }
+        this.conveniosModalAberta.set(true);
+    }
+
+    fecharConveniosModal(): void {
+        this.conveniosModalAberta.set(false);
+        this.conveniosArray.clear();
+    }
+
+    onConveniosSalvos(): void {
+        this.refresh$.next();
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Convênios atualizados',
+            detail: 'Os convênios do paciente foram atualizados com sucesso.',
+            life: 3000,
+        });
     }
 
     salvar(): void {

@@ -5,6 +5,7 @@ import { PagedResult } from '../../core/models/paged-result.model';
 import {
     PacienteAtualizar,
     PacienteCadastro,
+    PacienteConvenio,
     PacienteDetalhes,
     PacienteRequest,
     PacienteResumo,
@@ -34,6 +35,10 @@ export class PacienteService {
 
     atualizar(guid: string, paciente: Partial<Omit<PacienteAtualizar, 'guid'>>) {
         return this.http.patch<PacienteAtualizar>(API_ROUTES.pacientes.atualizar(guid), paciente);
+    }
+
+    atualizarConvenios(guid: string, convenios: PacienteConvenio[]) {
+        return this.http.patch<void>(API_ROUTES.pacientes.atualizarConvenios(guid), convenios);
     }
 
     remover(id: string) {

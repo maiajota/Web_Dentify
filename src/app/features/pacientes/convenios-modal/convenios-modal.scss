@@ -1,0 +1,102 @@
+@use 'variables' as *;
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid $cor-borda;
+}
+
+.modal-titulo {
+    font-size: 16px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+    margin: 0;
+}
+
+.modal-fechar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: $cor-texto-suave;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $cor-texto-escuro;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+}
+
+.modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.botao-cancelar {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid $cor-borda;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+        background: $cor-fundo-app;
+        color: $cor-texto-escuro;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}

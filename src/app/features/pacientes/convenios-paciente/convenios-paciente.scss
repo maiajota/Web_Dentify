@@ -1,0 +1,120 @@
+@use 'variables' as *;
+
+.convenios-secao {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.convenios-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.convenios-titulo {
+    font-size: 13px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+}
+
+.convenios-vazio {
+    font-size: 13px;
+    color: $cor-texto-suave;
+    margin: 0;
+}
+
+.botao-adicionar-convenio {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: white;
+    color: $cor-texto-suave;
+    border: 1px solid $cor-borda;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    &:hover {
+        background: #f9fafb;
+        color: $cor-texto-escuro;
+        border-color: #d1d5db;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}
+
+.convenios-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.convenio-linha {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+    padding: 12px;
+    background: $cor-fundo-app;
+    border-radius: 8px;
+}
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-escuro;
+}
+
+.campo-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.botao-remover-convenio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid $cor-borda;
+    border-radius: 6px;
+    color: $cor-texto-suave;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    &:hover {
+        color: #dc2626;
+        border-color: #dc2626;
+        background: #fef2f2;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $azul-primario;
+        outline-offset: 2px;
+    }
+}

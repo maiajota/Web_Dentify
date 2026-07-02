@@ -1,0 +1,62 @@
+<div class="convenios-secao">
+    <div class="convenios-cabecalho">
+        <span class="convenios-titulo">Convênios</span>
+        <button
+            type="button"
+            class="botao-adicionar-convenio"
+            (click)="adicionarLinha()"
+        >
+            <svg lucidePlus aria-hidden="true"></svg>
+            Adicionar Convênio
+        </button>
+    </div>
+
+    @if (!linhas().controls.length) {
+        <p class="convenios-vazio">Não há convênios selecionados.</p>
+    }
+
+    @if (linhas().controls.length) {
+        <div class="convenios-lista">
+            @for (linha of linhas().controls; track linha; let i = $index) {
+                <div class="convenio-linha" [formGroup]="linha">
+                    <div class="campo-grupo">
+                        <label class="campo-label" [for]="'convenio-guid-' + i">Convênio</label>
+                        <p-select
+                            [inputId]="'convenio-guid-' + i"
+                            formControlName="convenioGuid"
+                            [options]="convenios()"
+                            optionLabel="nome"
+                            optionValue="guid"
+                            placeholder="Selecione um convênio"
+                            appendTo="body"
+                        />
+                    </div>
+                    <div class="campo-grupo">
+                        <label class="campo-label" [for]="'codigo-beneficiario-' + i">
+                            Código do Beneficiário
+                        </label>
+                        <input
+                            pInputText
+                            [id]="'codigo-beneficiario-' + i"
+                            type="text"
+                            class="campo-input"
+                            formControlName="codigoBeneficiario"
+                            maxlength="30"
+                            autocomplete="off"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        class="botao-remover-convenio"
+                        pTooltip="Remover"
+                        tooltipPosition="top"
+                        [attr.aria-label]="'Remover convênio ' + (i + 1)"
+                        (click)="removerLinha(i)"
+                    >
+                        <svg lucideTrash aria-hidden="true"></svg>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { MessageService } from 'primeng/api';
 import { NovoPacienteComponent } from './novo-paciente';
 import { PacienteService } from '../paciente.service';
+import { ConvenioService } from '../../convenios/convenio.service';
 
 const DADOS_VALIDOS = {
     nome: 'Maria Laura Maia',
@@ -12,6 +13,7 @@ const DADOS_VALIDOS = {
     telefone: '(11) 91234-5678',
     dataNascimento: new Date('1990-01-15'),
     logradouro: 'Rua das Flores, 100',
+    convenios: [],
 };
 
 async function criarFixture(adicionarRetorno = of({})) {
@@ -22,6 +24,7 @@ async function criarFixture(adicionarRetorno = of({})) {
         providers: [
             provideRouter([]),
             { provide: PacienteService, useValue: pacientesService },
+            { provide: ConvenioService, useValue: { buscar: () => of([]) } },
             MessageService,
         ],
     })
@@ -135,6 +138,7 @@ describe('NovoPacienteComponent', () => {
                 telefone: '11912345678',
                 dataNascimento: DADOS_VALIDOS.dataNascimento,
                 logradouro: 'Rua das Flores, 100',
+                convenios: undefined,
             });
         });
 

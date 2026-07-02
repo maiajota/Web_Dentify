@@ -54,16 +54,51 @@
             }
         </div>
 
-        <section class="card-procedimentos" aria-label="Últimos procedimentos">
-            <div class="card-procedimentos-header">
-                <div class="procedimentos-cabecalho-textos">
-                    <h2 class="procedimentos-titulo">Últimos procedimentos</h2>
-                    <p class="procedimentos-subtitulo">
+        <section class="card-secao" aria-label="Convênios">
+            <div class="card-secao-header">
+                <div class="secao-cabecalho-textos">
+                    <h2 class="secao-titulo">Convênios</h2>
+                    <p class="secao-subtitulo">
+                        {{ p.convenios.length }} convênio{{ p.convenios.length === 1 ? '' : 's' }} cadastrado{{ p.convenios.length === 1 ? '' : 's' }}.
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    class="botao-acao-secao"
+                    (click)="abrirConveniosModal(p)"
+                >
+                    <svg lucideSettings2 aria-hidden="true"></svg>
+                    Gerir Convênios
+                </button>
+            </div>
+
+            <ul class="lista-convenios">
+                @for (convenio of p.convenios; track convenio.convenioGuid) {
+                    <li class="item-convenio">
+                        <div class="convenio-icone-wrapper" aria-hidden="true">
+                            <svg lucideShield class="convenio-icone"></svg>
+                        </div>
+                        <div class="convenio-textos">
+                            <span class="convenio-nome">{{ convenio.convenioNome }}</span>
+                            <span class="convenio-codigo">Código do beneficiário: {{ convenio.codigoBeneficiario }}</span>
+                        </div>
+                    </li>
+                } @empty {
+                    <li class="secao-vazia">Nenhum convênio cadastrado.</li>
+                }
+            </ul>
+        </section>
+
+        <section class="card-secao" aria-label="Últimos procedimentos">
+            <div class="card-secao-header">
+                <div class="secao-cabecalho-textos">
+                    <h2 class="secao-titulo">Últimos procedimentos</h2>
+                    <p class="secao-subtitulo">
                         Mostrando os {{ ultimosProcedimentos().length }} últimos procedimentos.
                     </p>
                 </div>
                 <a
-                    class="botao-historico"
+                    class="botao-acao-secao"
                     [routerLink]="['/pacientes', paciente()?.guid, 'procedimentos']"
                     aria-label="Ver histórico completo de procedimentos"
                 >
@@ -82,7 +117,7 @@
                         </div>
                     </li>
                 } @empty {
-                    <li class="procedimentos-vazios">Nenhum procedimento registrado.</li>
+                    <li class="secao-vazia">Nenhum procedimento registrado.</li>
                 }
             </ul>
         </section>
@@ -205,6 +240,15 @@
         [pacienteGuid]="paciente()!.guid"
         (salvo)="onProcedimentoSalvo()"
         (fechada)="fecharNovoProcedimentoModal()"
+    />
+}
+
+@if (conveniosModalAberta() && paciente()) {
+    <app-convenios-modal
+        [pacienteGuid]="paciente()!.guid"
+        [linhas]="conveniosArray"
+        (salvo)="onConveniosSalvos()"
+        (fechada)="fecharConveniosModal()"
     />
 }
 

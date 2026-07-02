@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideSave } from '@lucide/angular';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
@@ -8,6 +8,7 @@ import { PacienteService } from '../paciente.service';
 import { PacienteCadastro } from '../paciente.model';
 import { CpfMaskDirective } from '../cpf-mask.directive';
 import { TelefoneMaskDirective } from '../telefone-mask.directive';
+import { ConvenioFormGroup, ConveniosPacienteComponent } from '../convenios-paciente/convenios-paciente';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
@@ -21,6 +22,7 @@ import { MessageService } from 'primeng/api';
         InputText,
         CpfMaskDirective,
         TelefoneMaskDirective,
+        ConveniosPacienteComponent,
         ToastModule,
         DatePickerModule,
     ],
@@ -44,13 +46,18 @@ export class NovoPacienteComponent {
         telefone: [''],
         dataNascimento: [null as Date | null],
         logradouro: [''],
+        convenios: this.fb.array<ConvenioFormGroup>([]),
     });
+
+    get conveniosArray(): FormArray<ConvenioFormGroup> {
+        return this.form.controls.convenios;
+    }
 
     salvar(): void {
         if (this.form.invalid || this.salvando()) return;
 
         this.salvando.set(true);
-        const { nome, cpf, telefone, dataNascimento, logradouro } = this.form.getRawValue();
+        const { nome, cpf, telefone, dataNascimento, logradouro, convenios } = this.form.getRawValue();
 
         const novoPaciente: PacienteCadastro = {
             nome: nome!,
@@ -58,6 +65,12 @@ export class NovoPacienteComponent {
             telefone: telefone ? telefone.replace(/\D/g, '') : null,
             dataNascimento: dataNascimento ?? null,
             logradouro: logradouro || null,
+            convenios: convenios.length
+                ? convenios.map((c) => ({
+                      convenioGuid: c.convenioGuid!,
+                      codigoBeneficiario: c.codigoBeneficiario!,
+                  }))
+                : undefined,
         };
 
         this.pacientesService.adicionar(novoPaciente).subscribe({

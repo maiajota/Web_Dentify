@@ -19,6 +19,7 @@ const PACIENTE_MOCK: PacienteDetalhes = {
     dataNascimento: new Date('1990-01-15'),
     logradouro: 'Rua A, 100',
     quantidadeProcedimentos: 2,
+    convenios: [],
 };
 
 const PROCEDIMENTOS_MOCK: Procedimento[] = [
