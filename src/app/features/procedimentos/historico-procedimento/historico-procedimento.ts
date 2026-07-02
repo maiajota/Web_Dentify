@@ -12,7 +12,6 @@ import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { Tooltip } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { PacienteService } from '../../pacientes/paciente.service';
 import { ProcedimentoService } from '../procedimento.service';
 import { PagedResult } from '../../../core/models/paged-result.model';
@@ -40,10 +39,8 @@ import { Convenio } from '../../convenios/convenio.model';
         InputText,
         Textarea,
         Tooltip,
-        ToastModule,
         NovoProcedimentoModalComponent,
     ],
-    providers: [MessageService],
     templateUrl: './historico-procedimento.html',
     styleUrl: './historico-procedimento.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -16,6 +16,7 @@ export const API_ROUTES = {
         buscarPorId: (id: string) => `${BASE}/api/Paciente/buscar/${id}`,
         adicionar: `${BASE}/api/Paciente/adicionar`,
         atualizar: (id: string) => `${BASE}/api/Paciente/atualizar/${id}`,
+        atualizarConvenios: (id: string) => `${BASE}/api/Paciente/atualizar/${id}/convenios`,
         remover: (id: string) => `${BASE}/api/Paciente/remover/${id}`,
     },
     procedimentos: {

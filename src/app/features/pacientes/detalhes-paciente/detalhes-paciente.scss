@@ -160,7 +160,7 @@
     color: $cor-texto-escuro;
 }
 
-.card-procedimentos {
+.card-secao {
     background: white;
     border-radius: 12px;
     border: 1px solid $cor-borda;
@@ -168,7 +168,7 @@
     overflow: hidden;
 }
 
-.card-procedimentos-header {
+.card-secao-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -177,26 +177,26 @@
     border-bottom: 1px solid $cor-borda;
 }
 
-.procedimentos-cabecalho-textos {
+.secao-cabecalho-textos {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
 
-.procedimentos-titulo {
+.secao-titulo {
     font-size: 15px;
     font-weight: 600;
     color: $cor-texto-escuro;
     margin: 0;
 }
 
-.procedimentos-subtitulo {
+.secao-subtitulo {
     font-size: 12px;
     color: $cor-texto-suave;
     margin: 0;
 }
 
-.botao-historico {
+.botao-acao-secao {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -275,11 +275,65 @@
     color: $azul-primario;
 }
 
-.procedimentos-vazios {
+.secao-vazia {
     text-align: center;
     padding: 48px 24px;
     color: $cor-texto-suave;
     font-size: 14px;
+}
+
+.lista-convenios {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item-convenio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1px solid $cor-borda;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.convenio-icone-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba($azul-primario, 0.1);
+    flex-shrink: 0;
+}
+
+.convenio-icone {
+    width: 18px;
+    height: 18px;
+    color: $azul-primario;
+}
+
+.convenio-textos {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.convenio-nome {
+    font-size: 14px;
+    font-weight: 600;
+    color: $cor-texto-escuro;
+}
+
+.convenio-codigo {
+    font-size: 13px;
+    font-weight: 500;
+    color: $cor-texto-suave;
+    white-space: nowrap;
 }
 
 // Modal

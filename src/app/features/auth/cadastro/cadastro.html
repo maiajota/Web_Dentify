@@ -128,15 +128,3 @@
         </form>
     </div>
 </div>
-
-@if (toast()) {
-    <div
-        class="toast"
-        [class.toast--sucesso]="toast()!.tipo === 'sucesso'"
-        [class.toast--erro]="toast()!.tipo === 'erro'"
-        role="alert"
-        aria-live="polite"
-    >
-        {{ toast()!.texto }}
-    </div>
-}

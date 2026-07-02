@@ -6,6 +6,15 @@ export interface PacienteResumo {
   quantidadeProcedimentos: number;
 }
 
+export interface PacienteConvenio {
+    convenioGuid: string;
+    codigoBeneficiario: string;
+}
+
+export interface PacienteConvenioDetalhes extends PacienteConvenio {
+    convenioNome: string;
+}
+
 export interface PacienteDetalhes {
     guid: string;
     nome: string;
@@ -14,6 +23,7 @@ export interface PacienteDetalhes {
     dataNascimento?: Date | null;
     logradouro?: string | null;
     quantidadeProcedimentos: number;
+    convenios: PacienteConvenioDetalhes[];
 }
 
 export interface PacienteCadastro {
@@ -22,6 +32,7 @@ export interface PacienteCadastro {
     telefone?: string | null;
     dataNascimento?: Date | null;
     logradouro?: string | null;
+    convenios?: PacienteConvenio[];
 }
 
 export interface PacienteAtualizar {

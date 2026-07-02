@@ -2,15 +2,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
+import { MessageService } from 'primeng/api';
 import { ListaPacientesComponent } from './lista-pacientes';
 import { PacienteService } from '../paciente.service';
 import { PacienteRequest, PacienteResumo } from '../paciente.model';
 import { PagedResult } from '../../../core/models/paged-result.model';
 
 const PACIENTES_MOCK: PacienteResumo[] = [
-    { id: 1, nome: 'João Victor', cpf: '12345678900', telefone: '11911111111', quantidadeProcedimentos: 2 },
-    { id: 2, nome: 'Maria Laura', cpf: '98765432100', telefone: '11922222222', quantidadeProcedimentos: 4 },
-    { id: 3, nome: 'Diana Maia', cpf: '11122233344', telefone: '11933333333', quantidadeProcedimentos: 0 },
+    { guid: 'guid-1', nome: 'João Victor', cpf: '12345678900', telefone: '11911111111', quantidadeProcedimentos: 2 },
+    { guid: 'guid-2', nome: 'Maria Laura', cpf: '98765432100', telefone: '11922222222', quantidadeProcedimentos: 4 },
+    { guid: 'guid-3', nome: 'Diana Maia', cpf: '11122233344', telefone: '11933333333', quantidadeProcedimentos: 0 },
 ];
 
 function pagedResult(overrides?: Partial<PagedResult<PacienteResumo>>): PagedResult<PacienteResumo> {
@@ -29,6 +30,7 @@ async function criarFixture(result = pagedResult()) {
         providers: [
             provideRouter([]),
             { provide: PacienteService, useValue: pacientesService },
+            MessageService,
         ],
     }).compileComponents();
 
@@ -109,14 +111,14 @@ describe('ListaPacientesComponent', () => {
     describe('navegação', () => {
         it('deve navegar para a rota de detalhe ao chamar verPaciente()', () => {
             const navegar = vi.spyOn(router, 'navigate');
-            component.verPaciente(2);
-            expect(navegar).toHaveBeenCalledWith(['/pacientes', 2]);
+            component.verPaciente('guid-2');
+            expect(navegar).toHaveBeenCalledWith(['/pacientes', 'guid-2']);
         });
 
         it('deve navegar ao clicar no botão "Ver detalhes"', () => {
             const navegar = vi.spyOn(router, 'navigate');
             el.querySelector<HTMLButtonElement>('.botao-acao')?.click();
-            expect(navegar).toHaveBeenCalledWith(['/pacientes', 1]);
+            expect(navegar).toHaveBeenCalledWith(['/pacientes', 'guid-1']);
         });
     });
 });

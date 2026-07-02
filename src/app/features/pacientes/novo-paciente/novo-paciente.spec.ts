@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { MessageService } from 'primeng/api';
 import { NovoPacienteComponent } from './novo-paciente';
 import { PacienteService } from '../paciente.service';
+import { ConvenioService } from '../../convenios/convenio.service';
 
 const DADOS_VALIDOS = {
     nome: 'Maria Laura Maia',
@@ -12,6 +13,7 @@ const DADOS_VALIDOS = {
     telefone: '(11) 91234-5678',
     dataNascimento: new Date('1990-01-15'),
     logradouro: 'Rua das Flores, 100',
+    convenios: [],
 };
 
 async function criarFixture(adicionarRetorno = of({})) {
@@ -22,14 +24,10 @@ async function criarFixture(adicionarRetorno = of({})) {
         providers: [
             provideRouter([]),
             { provide: PacienteService, useValue: pacientesService },
+            { provide: ConvenioService, useValue: { buscar: () => of([]) } },
             MessageService,
         ],
-    })
-        .overrideComponent(NovoPacienteComponent, {
-            // remove component-level MessageService so Toast uses the module-level one
-            set: { providers: [] },
-        })
-        .compileComponents();
+    }).compileComponents();
 
     const fixture = TestBed.createComponent(NovoPacienteComponent);
     const component = fixture.componentInstance;
@@ -135,6 +133,7 @@ describe('NovoPacienteComponent', () => {
                 telefone: '11912345678',
                 dataNascimento: DADOS_VALIDOS.dataNascimento,
                 logradouro: 'Rua das Flores, 100',
+                convenios: undefined,
             });
         });
 
@@ -155,14 +154,11 @@ describe('NovoPacienteComponent', () => {
             );
         });
 
-        it('deve navegar para /pacientes após 2 segundos do sucesso', () => {
-            vi.useFakeTimers();
+        it('deve navegar para /pacientes imediatamente após o sucesso', () => {
             const navegar = vi.spyOn(router, 'navigate');
             component.form.setValue(DADOS_VALIDOS);
             component.salvar();
-            vi.advanceTimersByTime(2000);
             expect(navegar).toHaveBeenCalledWith(['/pacientes']);
-            vi.useRealTimers();
         });
 
         it('deve redefinir salvando para false em caso de erro', () => {

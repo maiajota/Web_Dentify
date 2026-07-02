@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { vi } from 'vitest';
+import { MessageService } from 'primeng/api';
 import { CadastroComponent } from './cadastro';
 import { AuthService } from '../auth.service';
 
@@ -14,6 +15,7 @@ describe('CadastroComponent', () => {
     let fixture: ComponentFixture<CadastroComponent>;
     let component: CadastroComponent;
     let authService: ReturnType<typeof criarAuthServiceMock>;
+    let messageService: MessageService;
     let router: Router;
     let el: HTMLElement;
 
@@ -25,12 +27,15 @@ describe('CadastroComponent', () => {
             providers: [
                 provideRouter([]),
                 { provide: AuthService, useValue: authService },
+                MessageService,
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CadastroComponent);
         component = fixture.componentInstance;
         router = TestBed.inject(Router);
+        messageService = TestBed.inject(MessageService);
+        vi.spyOn(messageService, 'add');
         el = fixture.nativeElement as HTMLElement;
         fixture.detectChanges();
     });
@@ -169,7 +174,9 @@ describe('CadastroComponent', () => {
             it('should show error toast when passwords do not match', () => {
                 component.form.patchValue({ senha: 'senha123', confirmarSenha: 'outra456' });
                 component.cadastrar();
-                expect(component.toast()).toEqual({ tipo: 'erro', texto: 'As senhas não coincidem.' });
+                expect(messageService.add).toHaveBeenCalledWith(
+                    expect.objectContaining({ severity: 'error', detail: 'As senhas não coincidem.' }),
+                );
             });
 
             it('should not call service when passwords do not match', () => {
@@ -235,13 +242,24 @@ describe('CadastroComponent', () => {
             it('should show success toast when auto-login fails after registration', () => {
                 authService.login.mockReturnValue(throwError(() => new Error()));
                 component.cadastrar();
-                expect(component.toast()).toEqual({ tipo: 'sucesso', texto: 'Conta criada! Faça login para continuar.' });
+                expect(messageService.add).toHaveBeenCalledWith(
+                    expect.objectContaining({ severity: 'success', detail: 'Conta criada! Faça login para continuar.' }),
+                );
+            });
+
+            it('should navigate to "/login" immediately when auto-login fails after registration', () => {
+                authService.login.mockReturnValue(throwError(() => new Error()));
+                const navegar = vi.spyOn(router, 'navigate');
+                component.cadastrar();
+                expect(navegar).toHaveBeenCalledWith(['/login']);
             });
 
             it('should show error toast when cadastrar fails', () => {
                 authService.cadastrar.mockReturnValue(throwError(() => new Error()));
                 component.cadastrar();
-                expect(component.toast()).toEqual({ tipo: 'erro', texto: 'Erro ao criar conta. Tente novamente.' });
+                expect(messageService.add).toHaveBeenCalledWith(
+                    expect.objectContaining({ severity: 'error', detail: 'Erro ao criar conta. Tente novamente.' }),
+                );
             });
 
             it('should stop loading when cadastrar fails', () => {
